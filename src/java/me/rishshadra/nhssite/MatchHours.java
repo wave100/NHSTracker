@@ -24,31 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 public class MatchHours extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Returns a short description of the servlet.
      *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
+     * @return a String containing servlet description
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos);
-        System.setOut(ps);
-        String content = baos.toString("ISO-8859-1");
-        IDMatcher idm = new IDMatcher();
-        try {
-            idm.matchIDs();
-        } catch (SQLException ex) {
-            Logger.getLogger(MatchHours.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try (PrintWriter out = response.getWriter()) {
-            out.println(content);
-        }
-    }
+    @Override
+    public String getServletInfo() {
+        return "Short description";
+    }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -80,13 +63,28 @@ public class MatchHours extends HttpServlet {
     }
 
     /**
-     * Returns a short description of the servlet.
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
      *
-     * @return a String containing servlet description
+     * @param request servlet request
+     * @param response servlet response
+     * @throws ServletException if a servlet-specific error occurs
+     * @throws IOException if an I/O error occurs
      */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+    protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        System.setOut(ps);
+        String content = baos.toString("ISO-8859-1");
+        IDMatcher idm = new IDMatcher();
+        try {
+            idm.matchIDs();
+        } catch (SQLException ex) {
+            Logger.getLogger(MatchHours.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try (PrintWriter out = response.getWriter()) {
+            out.println(content);
+        }
+    }
 }

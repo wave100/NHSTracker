@@ -16,10 +16,11 @@ import java.util.logging.Logger;
  */
 public class Student {
 
-    private int id, gradyear, pin;
-    private String name;
-    private boolean empty;
     private ArrayList<Activity> activities;
+    private boolean empty;
+
+    private int gradyear, id, pin;
+    private String name;
 
     public Student(int i, String n, int g, int p) {
         id = i;
@@ -32,50 +33,9 @@ public class Student {
         empty = b;
     }
 
-    public int getID() {
-        return id;
-    }
-
-    public int getGradYear() {
-        return gradyear;
-    }
-
-    public void setGradYear(int y) {
-        gradyear = y;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public int getPIN() {
-        return pin;
-    }
-
-    public boolean validatePIN(int p) {
-        return pin == p;
-    }
-
     public int generateNewPIN() {
         setPin(new Reader().generatePIN());
         return pin;
-    }
-
-    public boolean setPin(int i) {
-        if (String.valueOf(i).length() == 4) {
-            pin = i;
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public void updateActivities() {
-        try {
-            activities = new Reader().getStudentActivities(id);
-        } catch (SQLException ex) {
-            Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     public ArrayList getActivities() {
@@ -87,6 +47,10 @@ public class Student {
         return activities;
     }
 
+    public int getGradYear() {
+        return gradyear;
+    }
+
     public int getHours() {
         getActivities();
         int sum = 0;
@@ -96,12 +60,49 @@ public class Student {
         return sum;
     }
 
+    public int getID() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPIN() {
+        return pin;
+    }
+
+    public void setGradYear(int y) {
+        gradyear = y;
+    }
+
+    public boolean setPin(int i) {
+        if (String.valueOf(i).length() == 4) {
+            pin = i;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void update() {
         try {
             new Reader().updateStudent(this);
         } catch (SQLException ex) {
             Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void updateActivities() {
+        try {
+            activities = new Reader().getStudentActivities(id);
+        } catch (SQLException ex) {
+            Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public boolean validatePIN(int p) {
+        return pin == p;
     }
 
 }

@@ -18,9 +18,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.rishshadra.nhssite.Activity;
-import me.rishshadra.nhssite.Database;
-import me.rishshadra.nhssite.Student;
 
 /**
  *
@@ -180,6 +177,30 @@ public class Reader {
         rs.close();
     }
 
+    public void removeStudent(int id) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM studb WHERE StudentID=?;")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+
+        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE StudentID=?;")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+
+    public void removeStudent(Student s) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM studb WHERE StudentID=?;")) {
+            ps.setInt(1, s.getID());
+            ps.executeUpdate();
+        }
+
+        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE StudentID=?;")) {
+            ps.setInt(1, s.getID());
+            ps.executeUpdate();
+        }
+    }
+
     public void testConnection() throws SQLException {
         connect.prepareStatement("show tables;").execute();
         while (connect.isClosed()) {
@@ -216,31 +237,7 @@ public class Reader {
             connect = db.getConnection();
         } catch (SQLException ex) {
             Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
-        //    reconnect();
-        }
-    }
-
-    public void removeStudent(int id) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM studb WHERE StudentID=?;")) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        }
-        
-        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE StudentID=?;")) {
-            ps.setInt(1, id);
-            ps.executeUpdate();
-        }
-    }
-
-    public void removeStudent(Student s) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM studb WHERE StudentID=?;")) {
-            ps.setInt(1, s.getID());
-            ps.executeUpdate();
-        }
-        
-        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE StudentID=?;")) {
-            ps.setInt(1, s.getID());
-            ps.executeUpdate();
+            //    reconnect();
         }
     }
 

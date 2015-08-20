@@ -18,23 +18,26 @@ import java.util.logging.Logger;
 public class NHSDB {
 
     private static Reader reader;
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-            reader = new Reader();
-        
+        reader = new Reader();
+
         /*try {
-            new IDMatcher().matchIDs();
-            } catch (SQLException ex) {
-            Logger.getLogger(NHSDB.class.getName()).log(Level.SEVERE, null, ex);
-            }*/
-        
+         new IDMatcher().matchIDs();
+         } catch (SQLException ex) {
+         Logger.getLogger(NHSDB.class.getName()).log(Level.SEVERE, null, ex);
+         }*/
     }
 
-    private static void testPinGen() {
-        System.out.println(reader.generatePIN());
+    public static void randomizeStudentPINs() throws SQLException {
+        ArrayList<Student> students = reader.getStudentsByName("");
+        for (Student s : students) {
+            s.generateNewPIN();
+            s.update();
+        }
     }
 
     private static void addNamesToDB(int count) {
@@ -54,12 +57,8 @@ public class NHSDB {
         }
     }
 
-    public static void randomizeStudentPINs() throws SQLException {
-        ArrayList<Student> students = reader.getStudentsByName("");
-        for (Student s : students) {
-            s.generateNewPIN();
-            s.update();
-        }
+    private static void testPinGen() {
+        System.out.println(reader.generatePIN());
     }
 
 }

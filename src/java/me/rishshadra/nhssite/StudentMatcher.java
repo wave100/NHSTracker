@@ -10,27 +10,28 @@ package me.rishshadra.nhssite;
  * @author Rish
  */
 public class StudentMatcher {
-    public void matchByFirstName() {
-        
-    }
-    
-    public void matchByLastName() {
-        
-    }
-    
-    public void getFirstName() {
-        
-    }
-    
-    public void getLastName() {
-        
-    }
-    
-    public void truncateMiddleName() {
-        
-    }
-    
+
     public void attemptMatch() {
-        
+
+    }
+
+    public void getFirstName() {
+
+    }
+
+    public void getLastName() {
+
+    }
+
+    public void matchByFirstName() {
+
+    }
+
+    public void matchByLastName() {
+
+    }
+
+    public void truncateMiddleName() {
+
     }
 }

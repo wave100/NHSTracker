@@ -6,7 +6,6 @@
 package me.rishshadra.nhssite;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,9 +19,8 @@ import java.util.logging.Logger;
  */
 public class IDMatcher {
 
-    private Reader r;
-
     private Connection connect = null;
+    private Reader r;
 
     public IDMatcher() {
         r = new Reader();
@@ -35,11 +33,11 @@ public class IDMatcher {
     }
 
     public void matchIDs() throws SQLException {
-        
+
         try (PreparedStatement clearHourDB = connect.prepareStatement("TRUNCATE hrdb;")) {
             clearHourDB.executeUpdate();
         }
-        
+
         PreparedStatement tempdbps = connect.prepareStatement("SELECT * FROM tempdb;");
         ResultSet tempdbrs = tempdbps.executeQuery();
         ArrayList<String> unindexedStudents = new ArrayList<>();
@@ -66,19 +64,19 @@ public class IDMatcher {
                     r.addActivity(namedstudents.get(0).getID(), tempdbrs.getFloat("hrs"), tempdbrs.getString("description"), tempdbrs.getString("supervisor"), tempdbrs.getString("contact"), false, false);
                     counter++;
                 }
-                if(r.getStudentsByName(name).size() > 1) {
+                if (r.getStudentsByName(name).size() > 1) {
                     System.out.println(name + " (Duplicated)");
                 }
-                
+
             } else {
                 r.addActivity(namedstudents.get(0).getID(), tempdbrs.getFloat("hrs"), tempdbrs.getString("description"), tempdbrs.getString("supervisor"), tempdbrs.getString("contact"), false, false);
                 counter++;
             }
 
         }
-        
+
         NHSDB.randomizeStudentPINs();
-        
+
         System.out.println("\n" + unmatched + " unmatched entries from " + unmatchedstudents + " students.");
         System.out.println(counter + " rows successfully migrated.");
         System.out.println(processedcounter + " entries processed.");
