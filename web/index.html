@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NHS Volunteer Hour Tracking System</title>
+    <script language="javascript">
+        var searchURL = "RequestHandler?action=searchstudents&studentname=";
+        var hoursURL = "RequestHandler?action=gethours&id="
+        
+        function setStudentList(url) {
+            document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value);
+        }
+        
+        function viewHours(id) {
+            document.getElementById("resultFrame").setAttribute("src", hoursURL + id);
+        }
+
+    </script>    
+    
+    <style>
+        
+        #resultFrame {
+            border: none;
+            overflow: hidden;
+        }
+        
+    </style>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<h3>View Student Hours</h3>
+
+<form>
+    <input id="studentName" type="text" name="studentname" placeholder="Student Name" oninput="setStudentList(searchURL)"/>
+</form>
+
+<iframe id="resultFrame" src="RequestHandler?action=blank"></iframe>
+
+</body>
+</html>
+
