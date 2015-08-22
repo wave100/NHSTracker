@@ -1,57 +1,100 @@
 <!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <html>
-<head>
-    <title>NHS Volunteer Hour Tracking System</title>
-    <script language="javascript">
-        var searchURL = "RequestHandler?action=searchstudents&studentname=";
-        var hoursURL = "RequestHandler?action=gethours&id="
-        
-        function setStudentList(url) {
-            document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value);
-        }
-        
-        function viewHours(id) {
-            document.getElementById("resultFrame").setAttribute("src", hoursURL + id);
-        }
+    <head>
+        <title>Submit Hours</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="img/favicon.ico">
+        <!-- Bootstrap core CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- Bootstrap theme -->
+        <link href="css/bootstrap-theme.min.css" rel="stylesheet">
 
-    </script>    
-    
-    <style>
-        
-        #resultFrame {
-            border: none;
-            overflow: hidden;
-        }
-        
-    </style>
-    
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-<h3>View Student Hours</h3>
+        <!-- Custom styles for this template -->
+        <link href="css/theme.css" rel="stylesheet">
 
-<form>
-    <input id="studentName" type="text" name="studentname" placeholder="Student Name" oninput="setStudentList(searchURL)"/>
-</form>
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
 
-<iframe id="resultFrame" src="RequestHandler?action=blank"></iframe>
 
-<!--<center><h3>Volunteer Sign-In</h3></center>
+        <script language="javascript">
+            var searchURL = "RequestHandler?action=searchstudents&studentname=";
+            var hoursURL = "RequestHandler?action=gethours&id="
 
-<center><h4>Please sign in on both this website and the piece of paper below. This site is still in beta and it could lose your hours.</h4></center>
-<br />
-<form action="GroupHourHandler" method="POST">
-<input type="text" name="fname" placeholder="First Name" required/>
-<input type="text" name="lname" placeholder="Last Name" required/> <br /> <br />
-<input type="checkbox" id="cert" required /> <label for="cert">I certify that I am the person who is signing in or out.</label> <br /> <br />
-<input type="radio" name="action" id = "signin" value="signin" /> <label for="signin">Sign In</label>
-<input type="radio" name="action" id = "signout" value="signout" /><label for="signout">Sign Out</label>
-<input type="submit" />
-</form>-->
+            function setStudentList(url) {
+                document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value);
+            }
 
-<a href="submit.html">Submit Hours</a>
+            function viewHours(id) {
+                document.getElementById("resultFrame").setAttribute("src", hoursURL + id);
+            }
 
-</body>
+        </script>    
+
+        <style>
+
+            #resultFrame {
+                border: none;
+                overflow-x: hidden;
+                overflow-y: hidden;
+                height: 100%;
+                width: 100%;
+            }
+
+        </style>
+
+    </head>
+    <body role="document">
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#" style="cursor:default;"><img style="max-width:40px; margin-top: -7px;" src="img/logo.png"><img> </a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="index.html">View</a></li>
+                        <li><a href="submit.html">Submit</a></li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </nav>
+
+        <div class="container theme-showcase" role="main" id="maindiv">
+
+            <frame id="notificationframe"><div class="alert alert-danger" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>
+
+
+            <form>
+                <input id="studentName" type="text" name="studentname" placeholder="Student Name" oninput="setStudentList(searchURL)"/>
+            </form>
+
+            <iframe id="resultFrame" src="RequestHandler?action=blank" seamless="seamless" scrolling="no"></iframe>
+        </div> <!-- /container -->
+
+        <!-- Bootstrap core JavaScript
+    ================================================== -->
+        <!-- Placed at the end of the document so the pages load faster -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+        <script src="assets/js/ie10-viewport-bug-workaround.js"></script>
+    </body>
 </html>
-
