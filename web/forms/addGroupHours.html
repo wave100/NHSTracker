@@ -1,0 +1,15 @@
+<html>
+<head>
+<title>Submit Group Hours</title>
+</head>
+<body>
+<form action="GroupHourHandler" method="POST">
+<input type="text" name="fname" placeholder="First Name" required/>
+<input type="text" name="lname" placeholder="Last Name" required/> <br /> <br />
+<input type="checkbox" id="cert" required /> <label for="cert">I certify that I am the person who is signing in or out.</label> <br /> <br />
+<input type="radio" name="action" id = "signin" value="signin" /> <label for="signin">Sign In</label>
+<input type="radio" name="action" id = "signout" value="signout" /><label for="signout">Sign Out</label>
+<input type="submit" />
+</form>
+</body>
+</html>
