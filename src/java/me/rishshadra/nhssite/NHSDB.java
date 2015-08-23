@@ -1,5 +1,6 @@
 package me.rishshadra.nhssite;
 
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,7 +18,7 @@ import java.util.logging.Logger;
  */
 public class NHSDB {
 
-    private static Reader reader;
+    private static Reader reader = new Reader();
 
     /**
      * @param args the command line arguments
@@ -25,11 +26,11 @@ public class NHSDB {
     public static void main(String[] args) {
         reader = new Reader();
 
-        /*try {
-         new IDMatcher().matchIDs();
+        try {
+         new IDMatcher().matchIDs(new PrintWriter(System.out));
          } catch (SQLException ex) {
          Logger.getLogger(NHSDB.class.getName()).log(Level.SEVERE, null, ex);
-         }*/
+         }
     }
 
     public static void randomizeStudentPINs() throws SQLException {

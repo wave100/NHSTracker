@@ -5,6 +5,7 @@
  */
 package me.rishshadra.nhssite;
 
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +33,7 @@ public class IDMatcher {
         }
     }
 
-    public void matchIDs() throws SQLException {
+    public void matchIDs(PrintWriter out) throws SQLException {
 
         try (PreparedStatement clearHourDB = connect.prepareStatement("TRUNCATE hrdb;")) {
             clearHourDB.executeUpdate();
@@ -50,7 +51,7 @@ public class IDMatcher {
             processedcounter++;
             String name = tempdbrs.getString("studentname");
             ArrayList<Student> namedstudents = r.getStudentsByName(name);
-            if (r.getStudentsByName(name).size() != 1) {
+            if (r.getStudentsByName(name).size() != 1 && name.contains(" ")) {
                 if (r.getStudentsByName(name.substring(name.indexOf(" "), name.length())).size() != 1) {
                     unmatched++;
                     System.out.println(name + " (Unmatched)");
@@ -68,6 +69,9 @@ public class IDMatcher {
                     System.out.println(name + " (Duplicated)");
                 }
 
+            } else if (r.getStudentsByName(name).size() != 1 && !name.contains(" ")) {
+                unmatched++;
+                System.out.println(name + " (Unmatched)");
             } else {
                 r.addActivity(namedstudents.get(0).getID(), tempdbrs.getFloat("hrs"), tempdbrs.getString("description"), tempdbrs.getString("supervisor"), tempdbrs.getString("contact"), false, false);
                 counter++;

@@ -73,18 +73,11 @@ public class MatchHours extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos);
-        System.setOut(ps);
-        String content = baos.toString("ISO-8859-1");
-        IDMatcher idm = new IDMatcher();
-        try {
-            idm.matchIDs();
+        
+        try (PrintWriter out = response.getWriter()) {
+            new IDMatcher().matchIDs(out);
         } catch (SQLException ex) {
             Logger.getLogger(MatchHours.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try (PrintWriter out = response.getWriter()) {
-            out.println(content);
         }
     }
 }

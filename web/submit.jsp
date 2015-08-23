@@ -43,17 +43,19 @@ and open the template in the editor.
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a href="index.html">View</a></li>
-                        <li class="active"><a href="submit.html">Submit</a></li>
+                        <li><a href="index.jsp">View</a></li>
+                        <li class="active"><a href="submit.jsp">Submit</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
 
         <div class="container theme-showcase" role="main">
-
-            <frame id="notificationframe"><div class="alert alert-danger" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>
-
+            <% if (request.getAttribute("error") == null) {%>
+                <frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>
+            <%} else {%>
+                <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
+            <%}%>
 
             <form method="POST" action="RequestHandler">
                 <input type="hidden" name="action" value="addactivity" />
@@ -63,7 +65,7 @@ and open the template in the editor.
                 <input type="number" step="any" min="0" name="hours" placeholder="Hours Completed" required /> <br />
                 <input type="text" name="description" placeholder="Description" required /> <br /> <br />
                 <div id="groupdiv">Was this project a group project? &nbsp;&nbsp; <input type="checkbox" name="groupproj" id="group" /> <br /> <br />
-                    
+
                     <input type="submit" /> &nbsp;&nbsp; By submitting this form, I swear that all of the information in this form is truthful.</div>
             </form>
         </div> <!-- /container -->

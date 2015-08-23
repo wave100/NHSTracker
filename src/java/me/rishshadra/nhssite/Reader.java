@@ -135,13 +135,13 @@ public class Reader {
             rs = ps.executeQuery();
             if (getResultSetLength(rs) == 0) {
                 System.out.println("No student found with ID " + id);
-                s = new Student(true);
+                s = new Student(true, "No student found with ID " + id);
             } else if (getResultSetLength(rs) == 1) {
                 rs.next();
                 s = new Student(rs.getInt("StudentID"), rs.getString("Name"), rs.getInt("GraduationYear"), rs.getInt("PIN"));
             } else {
                 System.out.println("Multiple matches found with ID " + id);
-                s = new Student(true);
+                s = new Student(true, "Multiple matches found with ID " + id);
             }
         }
         rs.close();

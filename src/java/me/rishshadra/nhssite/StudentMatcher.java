@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * @author Rish
  */
 public class StudentMatcher {
-    
+
     private static final Reader r = new Reader();
 
     public static int matchByFirstName(String fname) throws SQLException {
@@ -40,11 +40,19 @@ public class StudentMatcher {
     }
 
     public static String getLastName(String s) {
-        return s.substring(s.indexOf(" ") + 1, s.length());
+        if (s.contains(" ")) {
+            return s.substring(s.indexOf(" ") + 1, s.length());
+        } else {
+            return s;
+        }
     }
 
     public static String getFirstName(String s) {
-        return s.substring(0, s.indexOf(" "));
+        if (s.contains(" ")) {
+            return s.substring(0, s.indexOf(" "));
+        } else {
+            return s;
+        }
     }
 
     public void truncateMiddleName(String fullname) {

@@ -8,6 +8,7 @@ package me.rishshadra.nhssite;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
@@ -32,7 +33,7 @@ public class RequestHandler extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "General request handler for getting info out of database";
+        return "General request handler for getting info out of the database";
     }// </editor-fold>
 
     @Override
@@ -87,22 +88,31 @@ public class RequestHandler extends HttpServlet {
 
             if (map.containsKey("action")) {
                 if (request.getParameter("action").equalsIgnoreCase("addstudent")) {
+                    System.out.println("Adding Student.");
                     addStudent(out, request);
                 } else if (request.getParameter("action").equalsIgnoreCase("removestudent")) {
+                    System.out.println("Removing Student.");
                     removeStudent(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("updatestudent")) {
+                    System.out.println("Updating Student.");
                     updateStudent(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("addactivity")) {
+                    System.out.println("Adding Activity");
                     addActivity(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("removeactivity")) {
+                    System.out.println("Removing Activity");
                     removeActivity(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("updateactivity")) {
+                    System.out.println("Updating Activity");
                     updateActivity(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("searchstudents")) {
+                    System.out.println("Searching Students");
                     searchStudents(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("gethours")) {
+                    System.out.println("Getting Hours");
                     getHours(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("blank")) {
+                    System.out.println("Generating Blank Page");
                     out.println("");
                 }
             } else {
@@ -156,13 +166,32 @@ public class RequestHandler extends HttpServlet {
 
         for (Student s : results) {
             out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + "ID: " + s.getID() + ", Name: " + s.getName() + "</a><br />");
-            //System.out.println("ID: " + s.getID() + ", Name: " + s.getName() + "<br />");
         }
     }
 
     public void getHours(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         try {
-            out.println(r.getStudentByID(Integer.parseInt(request.getParameter("id"))).getHours());
+            Student s = r.getStudentByID(Integer.parseInt(request.getParameter("id")));
+            if (!s.isEmpty()) {
+                DecimalFormat df = new DecimalFormat("###.##");
+                String checkboxFormat = "";
+                out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
+                out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;}</style>");
+                out.println("<table class=\"table table-striped\">");
+                out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
+                for (Activity a : (ArrayList<Activity>) s.getActivities()) {
+                    if (a.isApproved()) {
+                        checkboxFormat = "checked=\"checked\"";
+                    }
+                    out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<input type=\"checkbox\" disabled=\"disabled\" " + checkboxFormat + " />" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                }
+                out.println("</table>");
+                
+                out.println("<h4>Total: " + s.getHours() + " hours.</h4>");
+
+            } else {
+                out.println(s.getError());
+            }
         } catch (SQLException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -182,18 +211,24 @@ public class RequestHandler extends HttpServlet {
             }
             if (id > -1) {
                 try {
+                    System.out.println("Student matched.");
                     r.addActivity(id, Float.parseFloat(request.getParameter("hours")), request.getParameter("description"), request.getParameter("obsname"), request.getParameter("obsemail"), false, group);
                 } catch (SQLException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
-                    request.getRequestDispatcher("submit.html").forward(request, response);
-                } catch (ServletException | IOException ex) {
+                    request.setAttribute("error", "<strong>Success!</strong> Hours successfully added to " + r.getStudentByID(id).getName() + "'s total.");
+                    request.setAttribute("error-type", "success");
+                    request.getRequestDispatcher("submit.jsp").forward(request, response);
+                } catch (ServletException | IOException | SQLException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
+                System.out.println("Processing Error.");
                 try {
-                    request.getRequestDispatcher("error.html").forward(request, response);
+                    request.setAttribute("error", "<strong>Error!</strong> No such user found. Please check the spelling of your name and ensure that you are a member of the NHS. If the issue continues, contact rshadra@gmail.com.");
+                    request.setAttribute("error-type", "danger");
+                    request.getRequestDispatcher("submit.jsp").forward(request, response);
                 } catch (ServletException | IOException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }

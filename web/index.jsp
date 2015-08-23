@@ -49,7 +49,7 @@ and open the template in the editor.
                 border: none;
                 overflow-x: hidden;
                 overflow-y: hidden;
-                height: 100%;
+                height: 80%;
                 width: 100%;
             }
 
@@ -70,8 +70,8 @@ and open the template in the editor.
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="index.html">View</a></li>
-                        <li><a href="submit.html">Submit</a></li>
+                        <li class="active"><a href="index.jsp">View</a></li>
+                        <li><a href="submit.jsp">Submit</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -79,8 +79,11 @@ and open the template in the editor.
 
         <div class="container theme-showcase" role="main" id="maindiv">
 
-            <frame id="notificationframe"><div class="alert alert-danger" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>
-
+            <% if (request.getAttribute("error") == null) {%>
+            <frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>
+                <%} else {%>
+            <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
+                <%}%>
 
             <form>
                 <input id="studentName" type="text" name="studentname" placeholder="Student Name" oninput="setStudentList(searchURL)"/>

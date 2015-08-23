@@ -20,7 +20,7 @@ public class Student {
     private boolean empty;
 
     private int gradyear, id, pin;
-    private String name;
+    private String name, error;
 
     public Student(int i, String n, int g, int p) {
         id = i;
@@ -29,8 +29,9 @@ public class Student {
         pin = p;
     }
 
-    public Student(boolean b) {
+    public Student(boolean b, String e) {
         empty = b;
+        error = e;
     }
 
     public int generateNewPIN() {
@@ -45,6 +46,14 @@ public class Student {
             Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
         }
         return activities;
+    }
+    
+    public String getError() {
+        if (empty) {
+            return error;
+        } else {
+            return "No error.";
+        }
     }
 
     public int getGradYear() {
@@ -72,6 +81,10 @@ public class Student {
         return pin;
     }
 
+    public boolean isEmpty() {
+        return empty;
+    }
+    
     public void setGradYear(int y) {
         gradyear = y;
     }
