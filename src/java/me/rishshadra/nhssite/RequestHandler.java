@@ -24,9 +24,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RequestHandler extends HttpServlet {
 
-    Reader r;
+    //Reader r;
 
     public void addActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        Reader r = new Reader();
         if (request.getParameterMap().size() == 7 || request.getParameterMap().size() == 6) {
             int id = -1;
             try {
@@ -66,9 +67,15 @@ public class RequestHandler extends HttpServlet {
             System.out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (5+1 or 6+1) expected.");
             out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (5+1 or 6+1) expected.");
         }
+        try {
+            r.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void addStudent(PrintWriter out, HttpServletRequest request) {
+        Reader r = new Reader();
         Map<String, String[]> map = request.getParameterMap();
         if (request.getParameterMap().size() == 3) {
             if (map.containsKey("name") && map.containsKey("graduationyear")) {
@@ -84,14 +91,20 @@ public class RequestHandler extends HttpServlet {
             System.out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (2+1) expected."); //Add a function that returns a bool, true if lengths match false if lengths don't. If lengths don't, it does a println. Code = clean, problem = solved!
             out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (2+1) expected.");
         }
+        try {
+            r.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void getHours(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        Reader r = new Reader();
         try {
             Student s = r.getStudentByID(Integer.parseInt(request.getParameter("id")));
             if (!s.isEmpty()) {
                 DecimalFormat df = new DecimalFormat("###.##");
-                String checkboxFormat = "";
+                String checkboxFormat;
                 out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
                 out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;}</style>");
                 out.println("<table class=\"table table-striped\">");
@@ -114,33 +127,58 @@ public class RequestHandler extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+        try {
+            r.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    
+
     public void getHoursAdmin(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        Reader r = new Reader();
         try {
             Student s = r.getStudentByID(Integer.parseInt(request.getParameter("id")));
+            //System.out.println("1");
             if (!s.isEmpty()) {
+                //System.out.println("2");
                 DecimalFormat df = new DecimalFormat("###.##");
-                String checkboxFormat = "";
+                //System.out.println("2.1");
+                String checkboxFormat;
+                //System.out.println("2.2");
                 out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
+                //System.out.println("2.3");
                 out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;}</style>");
+                //System.out.println("2.4");
                 out.println("<table class=\"table table-striped\">");
+                //System.out.println("2.5");
                 out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
+                //System.out.println("2.6");
                 for (Activity a : (ArrayList<Activity>) s.getActivities()) {
+                    //System.out.println("3");
                     if (a.isApproved()) {
                         checkboxFormat = "checked=\"checked\"";
+                        //System.out.println("4");
                     } else {
+                        //System.out.println("5");
                         checkboxFormat = "";
                     }
-                    out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                    out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity\"/><input type=\"hidden\" name=\"id\" value=\"" + a.getStudentID() + "\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                    //System.out.println("6");
                 }
                 out.println("</table>");
-
+                //System.out.println("7");
                 out.println("<h4>Total: " + s.getHours() + " hours.</h4>");
-
+                //System.out.println("8");
             } else {
+                //System.out.println("9");
                 out.println(s.getError());
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //System.out.println("10");
+        try {
+            r.close();
         } catch (SQLException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -158,7 +196,7 @@ public class RequestHandler extends HttpServlet {
 
     @Override
     public void init() {
-        r = new Reader();
+        //r = new Reader();
     }
 
     public void removeActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
@@ -172,6 +210,7 @@ public class RequestHandler extends HttpServlet {
     }
 
     public void searchStudents(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        Reader r = new Reader();
         ArrayList<Student> results = new ArrayList<>();
         try {
             results = r.getStudentsByName(request.getParameter("studentname"));
@@ -182,17 +221,30 @@ public class RequestHandler extends HttpServlet {
         for (Student s : results) {
             out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + "ID: " + s.getID() + ", Name: " + s.getName() + "</a><br />");
         }
+        try {
+            r.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void toggleApproval(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        Reader r = new Reader();
         try {
             r.toggleApproval(Integer.parseInt(request.getParameter("activityid")));
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        getHoursAdmin(out, request, response);
+        try {
+            r.close();
         } catch (SQLException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void updateActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        Reader r = new Reader();
         if (request.getParameterMap().size() == 7 || request.getParameterMap().size() == 8 || request.getParameterMap().size() == 9) {
             boolean groupproj = false, approved = false;
             if (request.getParameterMap().containsKey("groupproj")) {
@@ -202,6 +254,11 @@ public class RequestHandler extends HttpServlet {
                 approved = true;
             }
             new Activity(Integer.parseInt(request.getParameter("studentid")), Float.parseFloat(request.getParameter("hours")), request.getParameter("description"), request.getParameter("obsname"), request.getParameter("obsemail"), approved, groupproj, Integer.parseInt(request.getParameter("activityid"))).update();
+        }
+        try {
+            r.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

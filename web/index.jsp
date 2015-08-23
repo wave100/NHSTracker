@@ -31,7 +31,7 @@ and open the template in the editor.
 
         <script language="javascript">
             var searchURL = "RequestHandler?action=searchstudents&studentname=";
-            var hoursURL = "RequestHandler?action=gethours&id="
+            var hoursURL = "RequestHandler?action=gethours&id=";
 
             function setStudentList(url) {
                 document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value);

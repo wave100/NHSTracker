@@ -40,11 +40,15 @@ public class Student {
     }
 
     public ArrayList getActivities() {
+        //System.out.println("Getting Activities");
+        Reader r = new Reader();
         try {
-            activities = new Reader().getStudentActivities(id);
+            activities = r.getStudentActivities(id);
+            r.close();
         } catch (SQLException ex) {
             Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
         }
+        //System.out.println("Activities Gotten");
         return activities;
     }
     
@@ -61,11 +65,15 @@ public class Student {
     }
 
     public int getHours() {
+        //System.out.println("Getting Hours");
         getActivities();
+        //System.out.println("Activities Gotten");
         int sum = 0;
         for (Activity activity : activities) {
+            //System.out.println("Summing Hours");
             sum += activity.getHours();
         }
+        //System.out.println("Hours Gotten");
         return sum;
     }
 

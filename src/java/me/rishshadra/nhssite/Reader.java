@@ -29,16 +29,20 @@ public class Reader {
     private Database db = new Database();
 
     public Reader() {
+        //System.out.println("Init Reader");
         try {
+            //System.out.println("Getting Conn");
             connect = db.getConnection();
+            //System.out.println("Gotten Conn");
         } catch (SQLException ex) {
             Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Reader: Reconnecting.");
             reconnect();
         }
     }
 
     public void addActivity(int i, float h, String d, String on, String oe, boolean a, boolean g) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO hrdb VALUES(?,?,?,?,?,?,?);")) {
+        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO hrdb VALUES(?,?,?,?,?,?,?,0);")) {
             ps.setInt(1, i);
             ps.setString(2, d);
             ps.setFloat(3, h);
@@ -127,6 +131,7 @@ public class Reader {
     }
 
     public ArrayList<Activity> getStudentActivities(int id) throws SQLException {
+        //System.out.println("Reader: Getting Student Activities.");
         ResultSet rs;
         ArrayList<Activity> activities;
         try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM hrdb WHERE StudentID=?;")) {
@@ -138,6 +143,7 @@ public class Reader {
             }
         }
         rs.close();
+        //System.out.println("Reader: Student Activities Returned");
         return activities;
     }
 

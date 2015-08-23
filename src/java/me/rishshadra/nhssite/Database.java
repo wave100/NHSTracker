@@ -43,6 +43,7 @@ public class Database {
     }
 
     public Connection getConnection() throws SQLException {
+        //System.out.println("Returning Connection");
         return dataSource.getConnection();
     }
 }
