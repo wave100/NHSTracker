@@ -25,8 +25,8 @@ import java.util.logging.Logger;
  */
 public class Reader {
 
-    Connection connect;
-    Database db = new Database();
+    private Connection connect;
+    private Database db = new Database();
 
     public Reader() {
         try {
@@ -51,8 +51,8 @@ public class Reader {
     }
 
     public void addActivity(Activity a) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO hrdb VALUES(?,?,?,?,?,?,?);")) {
-            ps.setInt(1, a.getId());
+        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO hrdb VALUES(?,?,?,?,?,?,?,0);")) {
+            ps.setInt(1, a.getStudentID());
             ps.setString(2, a.getProjdesc());
             ps.setFloat(3, a.getHours());
             ps.setString(4, a.getObsname());
@@ -100,10 +100,23 @@ public class Reader {
     public void endOfYearMaintenance() {
         // Back up information, write to CSV or similar and generate HTML summary page with a method that is to be written. Then truncate and restore students who will be returning next year to studb. Hrdb stays empty.
     }
-
     public int generatePIN() {
         Random r = new Random();
         return r.nextInt(9000) + 1000;
+    }
+
+    public Activity getActivityByID(int id) throws SQLException {
+        ResultSet rs;
+        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM hrdb WHERE ActivityID=?;")) {
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (getResultSetLength(rs) != 1) {
+                System.out.println("Multiple activities found with identical ID: " + id);
+            }
+            rs.next();
+            return new Activity(rs.getInt("StudentID"), rs.getFloat("Hours"), rs.getString("ProjDesc"), rs.getString("ObsName"), rs.getString("ObsEmail"), rs.getBoolean("approved"), rs.getBoolean("groupproj"), rs.getInt("ActivityID"));
+
+        }
     }
 
     public int getResultSetLength(ResultSet rs) throws SQLException {
@@ -121,7 +134,7 @@ public class Reader {
             rs = ps.executeQuery();
             activities = new ArrayList<>();
             while (rs.next()) {
-                activities.add(new Activity(rs.getInt("StudentID"), rs.getInt("Hours"), rs.getString("ProjDesc"), rs.getString("ObsName"), rs.getString("ObsEmail"), rs.getBoolean("Approved"), rs.getBoolean("GroupProj")));
+                activities.add(new Activity(rs.getInt("StudentID"), rs.getInt("Hours"), rs.getString("ProjDesc"), rs.getString("ObsName"), rs.getString("ObsEmail"), rs.getBoolean("Approved"), rs.getBoolean("GroupProj"), rs.getInt("ActivityID")));
             }
         }
         rs.close();
@@ -209,15 +222,23 @@ public class Reader {
         }
     }
 
+    public void toggleApproval(int id) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("UPDATE hrdb SET approved = !approved WHERE activityID=?;")) {
+            ps.setInt(1, id);
+            
+            ps.executeUpdate();
+        }
+    }
+
     public void updateActivity(Activity a) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("UPDATE hrdb SET ProjDesc=?, Hours=?, ObsName=?, ObsEmail=?, Approved=?, GroupProj=? WHERE StudentID=?;")) {
+        try (PreparedStatement ps = connect.prepareStatement("UPDATE hrdb SET ProjDesc=?, Hours=?, ObsName=?, ObsEmail=?, Approved=?, GroupProj=? WHERE ActivityID=?;")) {
             ps.setString(1, a.getProjdesc());
             ps.setFloat(2, a.getHours());
             ps.setString(3, a.getObsname());
             ps.setString(4, a.getObsemail());
             ps.setBoolean(5, a.isApproved());
             ps.setBoolean(6, a.isGroupproj()); //getStudentActivities must be run again to update the activity list.
-            ps.setInt(7, a.getId());
+            ps.setInt(7, a.getActivityID());
             ps.executeUpdate();
         }
     }

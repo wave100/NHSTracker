@@ -6,7 +6,7 @@ and open the template in the editor.
 -->
 <html>
     <head>
-        <title>Admin Page</title>
+        <title>View Hours (Admin)</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,13 +20,40 @@ and open the template in the editor.
         <link href="css/bootstrap-theme.min.css" rel="stylesheet">
 
         <!-- Custom styles for this template -->
-        <link href="theme.css" rel="stylesheet">
+        <link href="css/theme.css" rel="stylesheet">
 
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
+
+
+        <script language="javascript">
+            var searchURL = "RequestHandler?action=searchstudents&studentname=";
+            var hoursURL = "RequestHandler?action=gethoursadmin&id="
+
+            function setStudentList(url) {
+                document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value);
+            }
+
+            function viewHours(id) {
+                document.getElementById("resultFrame").setAttribute("src", hoursURL + id);
+            }
+
+        </script>    
+
+        <style>
+
+            #resultFrame {
+                border: none;
+                overflow-x: hidden;
+                overflow-y: hidden;
+                height: 80%;
+                width: 100%;
+            }
+
+        </style>
 
     </head>
     <body role="document">
@@ -39,32 +66,30 @@ and open the template in the editor.
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.html"><img style="max-width:40px; margin-top: -7px;" src="img/logo.png"></img> </a>
+                    <a class="navbar-brand" href="#" style="cursor:default;"><img style="max-width:40px; margin-top: -7px;" src="img/logo.png"></img> </a>
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="index.html">Submit Hours</a></li>
+                        <li class="active"><a href="index.jsp">View</a></li>
+                        <li><a href="submit.jsp">Submit</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
 
-        <div class="container theme-showcase" role="main">
+        <div class="container theme-showcase" role="main" id="maindiv">
 
-            <frame id="notificationframe"><div class="alert alert-danger" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>
+            <% if (request.getAttribute("error") == null) {%>
+            <frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>
+                <%} else {%>
+            <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
+                <%}%>
 
-
-            <form method="POST" action="RequestHandler">
-                <input type="hidden" name="action" value="addactivity" />
-                <input type="text" name="name" placeholder="Your Name" required /> <br />
-                <input type="text" name="obsname" placeholder="Observer Name" required /> <br />
-                <input type="text" name="obsemail" placeholder="Observer Email" required /> <br />
-                <input type="number" step="any" min="0" name="hours" placeholder="Hours Completed" required /> <br />
-                <input type="text" name="description" placeholder="Description" required /> <br /> <br />
-                <div id="groupdiv">Was this project a group project? &nbsp;&nbsp; <input type="checkbox" name="groupproj" id="group" /> <br /> <br />
-                    
-                    <input type="submit" /> &nbsp;&nbsp; By submitting this form, I swear that all of the information in this form is truthful.</div>
+            <form>
+                <input id="studentName" type="text" name="studentname" placeholder="Student Name" oninput="setStudentList(searchURL)"/>
             </form>
+
+            <iframe id="resultFrame" src="RequestHandler?action=blank" seamless="seamless" scrolling="no"></iframe>
         </div> <!-- /container -->
 
         <!-- Bootstrap core JavaScript

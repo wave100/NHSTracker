@@ -18,11 +18,12 @@ public class Activity {
     private boolean approved;
     private boolean groupproj;
     private float hours;
-    private int id;
+    private int studentID, activityID;
     private String obsemail, obsname, projdesc;
 
-    public Activity(int i, float h, String p, String on, String oe, boolean a, boolean g) {
-        id = i;
+    public Activity(int i, float h, String p, String on, String oe, boolean a, boolean g, int ai) {
+        activityID = ai;
+        studentID = i;
         hours = h;
         projdesc = p;
         obsname = on;
@@ -31,12 +32,16 @@ public class Activity {
         groupproj = g;
     }
 
+    public int getActivityID() {
+        return activityID;
+    }
+    
     public float getHours() {
         return hours;
     }
 
-    public int getId() {
-        return id;
+    public int getStudentID() {
+        return studentID;
     }
 
     public String getObsemail() {
@@ -71,8 +76,8 @@ public class Activity {
         this.hours = hours;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setStudentID(int id) {
+        this.studentID = id;
     }
 
     public void setObsemail(String obsemail) {
@@ -89,7 +94,7 @@ public class Activity {
 
     public void update() {
         try {
-            new Reader().addActivity(this);
+            new Reader().updateActivity(this);
         } catch (SQLException ex) {
             Logger.getLogger(Activity.class.getName()).log(Level.SEVERE, null, ex);
         }
