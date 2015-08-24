@@ -30,7 +30,7 @@ public class MatchHours extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Matches student information from temporary database to student IDs in student database and places them into hour database.";
     }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -72,12 +72,12 @@ public class MatchHours extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        
-        try (PrintWriter out = response.getWriter()) {
-            new IDMatcher().matchIDs(out);
-        } catch (SQLException ex) {
-            Logger.getLogger(MatchHours.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        response.setContentType("text/html;charset=UTF-8");
+//        
+//        try (PrintWriter out = response.getWriter()) {
+//            new IDMatcher().matchIDs(out);
+//        } catch (SQLException ex) {
+//            Logger.getLogger(MatchHours.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
 }

@@ -52,6 +52,18 @@ public class Student {
         return activities;
     }
     
+    public float getApprovedHours() {
+        getActivities();
+        
+        float sum = 0;
+        
+        for (Activity activity : activities) {
+            if (activity.isApproved()) sum += activity.getHours();
+        }
+        
+        return sum;
+    }
+    
     public String getError() {
         if (empty) {
             return error;
@@ -64,11 +76,23 @@ public class Student {
         return gradyear;
     }
 
-    public int getHours() {
+    public float getGroupHours() {
+        getActivities();
+        
+        float sum = 0;
+        
+        for (Activity activity : activities) {
+            if (activity.isGroupproj()) sum += activity.getHours();
+        }
+        
+        return sum;
+    }
+    
+    public float getHours() {
         //System.out.println("Getting Hours");
         getActivities();
         //System.out.println("Activities Gotten");
-        int sum = 0;
+        float sum = 0;
         for (Activity activity : activities) {
             //System.out.println("Summing Hours");
             sum += activity.getHours();

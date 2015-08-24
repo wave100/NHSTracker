@@ -31,10 +31,14 @@ and open the template in the editor.
 
         <script language="javascript">
             var searchURL = "RequestHandler?action=searchstudents&studentname=";
-            var hoursURL = "RequestHandler?action=gethoursadmin&id="
+            var hoursURL = "RequestHandler?action=gethoursadmin&id=";
 
             function setStudentList(url) {
-                document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value);
+                if (document.getElementById("belowQuota").checked) {
+                    document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value + "&belowQuota");
+                } else {
+                    document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value);
+                }
             }
 
             function viewHours(id) {
@@ -47,8 +51,6 @@ and open the template in the editor.
 
             #resultFrame {
                 border: none;
-                overflow-x: hidden;
-                overflow-y: hidden;
                 height: 80%;
                 width: 100%;
             }
@@ -86,10 +88,10 @@ and open the template in the editor.
                 <%}%>
 
             <form>
-                <input id="studentName" type="text" name="studentname" placeholder="Student Name" oninput="setStudentList(searchURL)"/>
+                <input id="studentName" type="text" name="studentname" placeholder="Search" oninput="setStudentList(searchURL)"/> Only show students under quota: <input id="belowQuota" name="belowQuota" type="checkbox" onClick="setStudentList(searchURL);" />
             </form>
 
-            <iframe id="resultFrame" src="RequestHandler?action=blank" seamless="seamless" scrolling="no"></iframe>
+            <iframe id="resultFrame" src="RequestHandler?action=searchstudents&studentname="></iframe>
         </div> <!-- /container -->
 
         <!-- Bootstrap core JavaScript

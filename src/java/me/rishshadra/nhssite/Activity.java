@@ -18,7 +18,8 @@ public class Activity {
     private boolean approved;
     private boolean groupproj;
     private float hours;
-    private int studentID, activityID;
+    private int studentID;
+    private final int activityID;
     private String obsemail, obsname, projdesc;
 
     public Activity(int i, float h, String p, String on, String oe, boolean a, boolean g, int ai) {

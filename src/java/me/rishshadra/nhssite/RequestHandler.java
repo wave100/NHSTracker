@@ -25,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 public class RequestHandler extends HttpServlet {
 
     //Reader r;
-
     public void addActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
         if (request.getParameterMap().size() == 7 || request.getParameterMap().size() == 6) {
@@ -106,7 +105,7 @@ public class RequestHandler extends HttpServlet {
                 DecimalFormat df = new DecimalFormat("###.##");
                 String checkboxFormat;
                 out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
-                out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;}</style>");
+                out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
                 out.println("<table class=\"table table-striped\">");
                 out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
                 for (Activity a : (ArrayList<Activity>) s.getActivities()) {
@@ -119,7 +118,7 @@ public class RequestHandler extends HttpServlet {
                 }
                 out.println("</table>");
 
-                out.println("<h4>Total: " + s.getHours() + " hours.</h4>");
+                out.println("<h4>Total: " + s.getHours() + " hours. (" + s.getApprovedHours() + " approved) </h4>");
 
             } else {
                 out.println(s.getError());
@@ -147,7 +146,7 @@ public class RequestHandler extends HttpServlet {
                 //System.out.println("2.2");
                 out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
                 //System.out.println("2.3");
-                out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;}</style>");
+                out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
                 //System.out.println("2.4");
                 out.println("<table class=\"table table-striped\">");
                 //System.out.println("2.5");
@@ -217,9 +216,21 @@ public class RequestHandler extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        for (Student s : results) {
-            out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + "ID: " + s.getID() + ", Name: " + s.getName() + "</a><br />");
+        out.println("<style>.notEnoughSubmitted{color: #0000EE !important;} a{color: #B2B2FA;} a:visited{color: #B2B2FA;}</style>");
+        if (request.getParameterMap().containsKey("belowQuota")) {
+            for (Student s : results) {
+                if (s.getApprovedHours() < 10) {
+                    if (s.getHours() >= 10) {
+                        out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" /*+ "ID: " + s.getID() + ",*Name: " +*/ + s.getName() + "</a><br />");
+                    } else {
+                        out.println("<a href=\"#\" class=\"notEnoughSubmitted\" onclick='parent.viewHours(" + s.getID() + ")'>" /* + "ID: " + s.getID() + ", Name: " +*/ + s.getName() + "</a><br />");
+                    }
+                }
+            }
+        } else {
+            for (Student s : results) {
+                out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" /*+ "ID: " + s.getID() + ", Name: " */ + s.getName() + "</a><br />");
+            }
         }
         try {
             r.close();

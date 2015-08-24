@@ -32,7 +32,7 @@ public class DatabaseStatus extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Displays status of the program's database connection.";
     }// </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -85,36 +85,36 @@ public class DatabaseStatus extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
             /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Database Status</title>");
-            out.println("</head>");
-            out.println("<body>");
-
-            Connection c = db.getConnection();
-
-            try {
-                out.println("Closed: " + c.isClosed());
-                out.println("ReadOnly: " + c.isReadOnly());
-                out.println("Valid: " + c.isValid(100));
-                out.println("Object: " + c);
-            } catch (CommunicationsException e) {
-                out.println("bork.");
-            }
-
-            if (c.isClosed()) {
-                out.println("booork.");
-                c.close();
-                c = db.getConnection();
-                out.println("Closed: " + c.isClosed());
-                out.println("ReadOnly: " + c.isReadOnly());
-                out.println("Valid: " + c.isValid(100));
-                out.println("Object: " + c);
-            }
-            c.close();
-            out.println("</body>");
-            out.println("</html>");
+//            out.println("<!DOCTYPE html>");
+//            out.println("<html>");
+//            out.println("<head>");
+//            out.println("<title>Database Status</title>");
+//            out.println("</head>");
+//            out.println("<body>");
+//
+//            Connection c = db.getConnection();
+//
+//            try {
+//                out.println("Closed: " + c.isClosed());
+//                out.println("ReadOnly: " + c.isReadOnly());
+//                out.println("Valid: " + c.isValid(100));
+//                out.println("Object: " + c);
+//            } catch (CommunicationsException e) {
+//                out.println("bork.");
+//            }
+//
+//            if (c.isClosed()) {
+//                out.println("booork.");
+//                c.close();
+//                c = db.getConnection();
+//                out.println("Closed: " + c.isClosed());
+//                out.println("ReadOnly: " + c.isReadOnly());
+//                out.println("Valid: " + c.isValid(100));
+//                out.println("Object: " + c);
+//            }
+//            c.close();
+//            out.println("</body>");
+//            out.println("</html>");
         }
     }
 }
