@@ -79,7 +79,11 @@ public class IDMatcher {
 
         }
 
-        NHSDB.randomizeStudentPINs();
+        ArrayList<Student> students = r.getStudentsByName("");
+        for (Student s : students) {
+            s.generateNewPIN();
+            s.update();
+        }
 
         System.out.println("\n" + unmatched + " unmatched entries from " + unmatchedstudents + " students.");
         System.out.println(counter + " rows successfully migrated.");
