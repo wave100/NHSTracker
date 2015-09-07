@@ -27,6 +27,7 @@ public class Student {
         name = n;
         gradyear = g;
         pin = p;
+        email = e;
     }
 
     public Student(boolean b, String e) {

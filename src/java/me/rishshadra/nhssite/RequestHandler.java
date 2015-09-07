@@ -13,10 +13,12 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import me.rishshadra.gmailer.GMailer;
 
 /**
  *
@@ -27,6 +29,7 @@ public class RequestHandler extends HttpServlet {
     //Reader r;
     public void addActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
+        GMailer mail = new GMailer();
         if (request.getParameterMap().size() == 7 || request.getParameterMap().size() == 6) {
             int id = -1;
             try {
@@ -40,9 +43,10 @@ public class RequestHandler extends HttpServlet {
             }
             if (id > -1) {
                 try {
-                    System.out.println("Student matched.");
+                    System.out.println("Student matched. Email: " + r.getStudentByID(id).getEmail());
                     r.addActivity(id, Float.parseFloat(request.getParameter("hours")), request.getParameter("description"), request.getParameter("obsname"), request.getParameter("obsemail"), false, group);
-                } catch (SQLException ex) {
+                    mail.sendMessage(r.getStudentByID(id).getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer hours. You have submitted a total of " + Float.toString(r.getStudentByID(id).getHours()) + " hours this year.");
+                } catch (SQLException | MessagingException | IOException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {

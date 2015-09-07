@@ -53,7 +53,7 @@ public class GMailer {
         email.setFrom(new InternetAddress("nhsit@hillers.org"));
         email.addRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(to));
         email.setSubject(subject);
-        email.setText(content);
+        email.setContent(content, "text/html; charset=utf-8");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         email.writeTo(baos);
