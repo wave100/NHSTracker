@@ -42,10 +42,14 @@ public class RequestHandler extends HttpServlet {
                 group = true; //TODO: MAKE SURE THIS WORKS.
             }
             if (id > -1) {
-                try {
+                try { //replace all the getStudentByIDs with one student obj somewhere here.
                     System.out.println("Student matched. Email: " + r.getStudentByID(id).getEmail());
                     r.addActivity(id, Float.parseFloat(request.getParameter("hours")), request.getParameter("description"), request.getParameter("obsname"), request.getParameter("obsemail"), false, group);
-                    mail.sendMessage(r.getStudentByID(id).getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer hours. You have submitted a total of " + Float.toString(r.getStudentByID(id).getHours()) + " hours this year.");
+                    String hourPlural1;
+                    String hourPlural2;
+                    if (Integer.valueOf(request.getParameter("hours")) == 1) {hourPlural1 = "hour";} else {hourPlural1 = "hours";}
+                    if ((r.getStudentByID(id).getHours() + Integer.valueOf(request.getParameter("hours"))) == 1) {hourPlural2 = "hour";} else {hourPlural2 = "hours";}
+                    mail.sendMessage(r.getStudentByID(id).getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer " + hourPlural1 + ". You have submitted a total of " + Float.toString(r.getStudentByID(id).getHours()) + " " + hourPlural2 + " this year. Click <a href=\"http://nhs.icarusnet.me/submit.jsp\">here</a> to submit more hours, or click <a href=\"http://nhs.icarusnet.me/RequestHandler?action=gethours&id=" + id + "\">here</a> to view a breakdown of the hours that you have submitted so far. <br /> <br /> <h6>This is an automatically generated message. Replies to this email will be forwarded to the NHS officers. Not " + r.getStudentByID(id).getName() + "? Send a message to rshadra@gmail.com and I'll sort it out.</h6> <br />"); //Format that float. Yes, that one. Also make the support email a constant somewhere so I don't end up getting support emails in college. Also add a constant for URL.
                 } catch (SQLException | MessagingException | IOException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -86,11 +90,13 @@ public class RequestHandler extends HttpServlet {
 
     public void addStudent(PrintWriter out, HttpServletRequest request) {
         Reader r = new Reader();
+        GMailer email = new GMailer();
         Map<String, String[]> map = request.getParameterMap();
         if (request.getParameterMap().size() == 4) {
             if (map.containsKey("name") && map.containsKey("graduationyear") && map.containsKey("email")) {
                 try {
                     r.addStudent(map.get("name")[0], Integer.parseInt(map.get("graduationyear")[0]), map.get(("email"))[0]);
+                    //email.sendMessage(map.get("email")[0], "Welcome to the National Honor Society!", "Dear ");
                 } catch (SQLException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
