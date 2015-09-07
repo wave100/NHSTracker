@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.rishshadra.nhssite.consts.Consts;
 
 /**
  *
@@ -193,7 +194,7 @@ public class Reader {
             ps.setString(1, lname);
             rs = ps.executeQuery();
             if (getResultSetLength(rs) == 1) {
-                addActivity(((Student) getStudentsByName(lname).get(0)).getID(), (new java.util.Date().getTime() - rs.getDate("StartTime").getTime()) / 3600000, "GROUP PROJECT", "Sara Williams", "sawilliams@hopkinton.k12.ma.us", false, true);
+                addActivity(((Student) getStudentsByName(lname).get(0)).getID(), (new java.util.Date().getTime() - rs.getDate("StartTime").getTime()) / 3600000, "GROUP PROJECT", Consts.GROUP_SUPERVISOR_NAME, Consts.GROUP_SUPERVISOR_EMAIL, false, true);
                 //System.out.println(getStudentsByName(lname).size());
             } else {
                 System.out.println("Name collision detected while signing out group project participant: " + getResultSetLength(rs) + " matches for last name " + lname);

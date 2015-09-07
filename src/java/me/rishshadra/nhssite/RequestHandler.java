@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import me.rishshadra.gmailer.GMailer;
+import me.rishshadra.nhssite.consts.Consts;
 
 /**
  *
@@ -49,7 +50,7 @@ public class RequestHandler extends HttpServlet {
                     String hourPlural2;
                     if (Integer.valueOf(request.getParameter("hours")) == 1) {hourPlural1 = "hour";} else {hourPlural1 = "hours";}
                     if ((r.getStudentByID(id).getHours() + Integer.valueOf(request.getParameter("hours"))) == 1) {hourPlural2 = "hour";} else {hourPlural2 = "hours";}
-                    mail.sendMessage(r.getStudentByID(id).getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer " + hourPlural1 + ". You have submitted a total of " + Float.toString(r.getStudentByID(id).getHours()) + " " + hourPlural2 + " this year. Click <a href=\"http://nhs.icarusnet.me/submit.jsp\">here</a> to submit more hours, or click <a href=\"http://nhs.icarusnet.me/RequestHandler?action=gethours&id=" + id + "\">here</a> to view a breakdown of the hours that you have submitted so far. <br /> <br /> <h6>This is an automatically generated message. Replies to this email will be forwarded to the NHS officers. Not " + r.getStudentByID(id).getName() + "? Send a message to rshadra@gmail.com and I'll sort it out.</h6> <br /> <br /> <h6>--</h6>"); //Format that float. Yes, that one. Also make the support email a constant somewhere so I don't end up getting support emails in college. Also add a constant for URL.
+                    mail.sendMessage(r.getStudentByID(id).getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer " + hourPlural1 + ". You have submitted a total of " + Float.toString(r.getStudentByID(id).getHours()) + " " + hourPlural2 + " this year. Click <a href=\" " + Consts.SITE_URL + "  /submit.jsp\">here</a> to submit more hours, or click <a href=\"" + Consts.SITE_URL + "/RequestHandler?action=gethours&id=" + id + "\">here</a> to view a breakdown of the hours that you have submitted so far. <br /> <br /> <h6>This is an automatically generated message. Replies to this email will be forwarded to the NHS officers. Not " + r.getStudentByID(id).getName() + "? Send a message to " + Consts.SUPPORT_EMAIL + " and I'll sort it out.</h6> <br /> <br /> <h6>--</h6>"); //Format that float. Yes, that one. Also make the support email a constant somewhere so I don't end up getting support emails in college. Also add a constant for URL.
                 } catch (SQLException | MessagingException | IOException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -70,7 +71,7 @@ public class RequestHandler extends HttpServlet {
                 System.out.println("\tApproval:\t\t\tfalse");
                 System.out.println("\tGroup Status:\t\t\t" + group);
                 try {
-                    request.setAttribute("error", "<strong>Error!</strong> No such user found. Please check the spelling of your name and ensure that you are a member of the NHS. If the issue continues, contact rshadra@gmail.com.");
+                    request.setAttribute("error", "<strong>Error!</strong> No such user found. Please check the spelling of your name and ensure that you are a member of the NHS. If the issue continues, contact " + Consts.SUPPORT_EMAIL + ".");
                     request.setAttribute("error-type", "danger");
                     request.getRequestDispatcher("submit.jsp").forward(request, response);
                 } catch (ServletException | IOException ex) {
