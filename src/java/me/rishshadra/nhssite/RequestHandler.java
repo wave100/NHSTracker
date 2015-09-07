@@ -43,22 +43,24 @@ public class RequestHandler extends HttpServlet {
                 group = true; //TODO: MAKE SURE THIS WORKS.
             }
             if (id > -1) {
-                try { //replace all the getStudentByIDs with one student obj somewhere here.
-                    System.out.println("Student matched. Email: " + r.getStudentByID(id).getEmail());
+                Student s = new Student(true, "Could not create student with ID: " + id);
+                try {
+                    s = r.getStudentByID(id);
+                    System.out.println("Student matched. Email: " + s.getEmail());
                     r.addActivity(id, Float.parseFloat(request.getParameter("hours")), request.getParameter("description"), request.getParameter("obsname"), request.getParameter("obsemail"), false, group);
                     String hourPlural1;
                     String hourPlural2;
                     if (Integer.valueOf(request.getParameter("hours")) == 1) {hourPlural1 = "hour";} else {hourPlural1 = "hours";}
-                    if ((r.getStudentByID(id).getHours() + Integer.valueOf(request.getParameter("hours"))) == 1) {hourPlural2 = "hour";} else {hourPlural2 = "hours";}
-                    mail.sendMessage(r.getStudentByID(id).getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer " + hourPlural1 + ". You have submitted a total of " + Float.toString(r.getStudentByID(id).getHours()) + " " + hourPlural2 + " this year. Click <a href=\" " + Consts.SITE_URL + "  /submit.jsp\">here</a> to submit more hours, or click <a href=\"" + Consts.SITE_URL + "/RequestHandler?action=gethours&id=" + id + "\">here</a> to view a breakdown of the hours that you have submitted so far. <br /> <br /> <h6>This is an automatically generated message. Replies to this email will be forwarded to the NHS officers. Not " + r.getStudentByID(id).getName() + "? Send a message to " + Consts.SUPPORT_EMAIL + " and I'll sort it out.</h6> <br /> <br /> <h6>--</h6>"); //Format that float. Yes, that one. Also make the support email a constant somewhere so I don't end up getting support emails in college. Also add a constant for URL.
+                    if ((s.getHours() + Integer.valueOf(request.getParameter("hours"))) == 1) {hourPlural2 = "hour";} else {hourPlural2 = "hours";}
+                    mail.sendMessage(s.getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer " + hourPlural1 + ". You have submitted a total of " + Float.toString(s.getHours()) + " " + hourPlural2 + " this year. Click <a href=\" " + Consts.SITE_URL + "  /submit.jsp\">here</a> to submit more hours, or click <a href=\"" + Consts.SITE_URL + "/RequestHandler?action=gethours&id=" + id + "\">here</a> to view a breakdown of the hours that you have submitted so far. <br /> <br /> <h6>This is an automatically generated message. Replies to this email will be forwarded to the NHS officers. Not " + s.getName() + "? Send a message to " + Consts.SUPPORT_EMAIL + " and I'll sort it out.</h6> <br /> <br /> <h6>--</h6>"); //Format that float. Yes, that one.
                 } catch (SQLException | MessagingException | IOException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 try {
-                    request.setAttribute("error", "<strong>Success!</strong> Hours successfully added to " + r.getStudentByID(id).getName() + "'s total.");
+                    request.setAttribute("error", "<strong>Success!</strong> Hours successfully added to " + s.getName() + "'s total.");
                     request.setAttribute("error-type", "success");
                     request.getRequestDispatcher("submit.jsp").forward(request, response);
-                } catch (ServletException | IOException | SQLException ex) {
+                } catch (ServletException | IOException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
