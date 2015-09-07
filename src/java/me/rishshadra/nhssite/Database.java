@@ -6,11 +6,13 @@
 package me.rishshadra.nhssite;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.naming.NoInitialContextException;
 import javax.sql.DataSource;
 
 /**
@@ -21,6 +23,7 @@ public class Database {
 
     static InitialContext initialContext;
     static DataSource dataSource;
+    static boolean localConnection;
 
     public Database() {
         try {
@@ -38,12 +41,30 @@ public class Database {
         try {
             dataSource = (DataSource) initialContext.lookup("java:comp/env/jdbc/nhsdb");
         } catch (NamingException ex) {
+            System.out.println("Local connection detected.");
+            localConnection = true;
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public Connection getConnection() throws SQLException {
         //System.out.println("Returning Connection");
-        return dataSource.getConnection();
+        if (localConnection) {
+            return connectToLocalDB();
+        } else {
+            return dataSource.getConnection();
+        }
+    }
+
+    public static Connection connectToLocalDB() {
+        Connection c = null;
+
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            c = DriverManager.getConnection("jdbc:mysql://localhost/nhsdb?user=root");
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return c;
     }
 }

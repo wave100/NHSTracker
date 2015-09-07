@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.NoInitialContextException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,15 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class DatabaseStatus extends HttpServlet {
 
-    Database db = new Database();
+    Database db;
+    
+    /**
+     * Initializes the servlet.
+     */
+    @Override
+    public void init() {
+        db = new Database();
+    }
 
     /**
      * Returns a short description of the servlet.

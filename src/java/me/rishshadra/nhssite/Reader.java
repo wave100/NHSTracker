@@ -26,9 +26,12 @@ import java.util.logging.Logger;
 public class Reader {
 
     private Connection connect;
-    private Database db = new Database();
+    private Database db;
 
     public Reader() {
+
+        db = new Database();
+
         //System.out.println("Init Reader");
         try {
             //System.out.println("Getting Conn");
@@ -76,21 +79,23 @@ public class Reader {
         }
     }
 
-    public void addStudent(String n, int g) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO studb VALUES(0,?,?,?);")) {
+    public void addStudent(String n, int g, String e) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO studb VALUES(0,?,?,?,?);")) {
             ps.setString(1, n);
             ps.setInt(2, g);
             ps.setInt(3, generatePIN());
+            ps.setString(4, e);
 
             ps.executeUpdate();
         }
     }
 
     public void addStudent(Student s) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO studb VALUES(0,?,?,?);")) {
+        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO studb VALUES(0,?,?,?,?);")) {
             ps.setString(1, s.getName());
             ps.setInt(2, s.getGradYear());
             ps.setInt(3, generatePIN());
+            ps.setString(4, s.getEmail());
 
             ps.executeUpdate();
         }
@@ -104,6 +109,7 @@ public class Reader {
     public void endOfYearMaintenance() {
         // Back up information, write to CSV or similar and generate HTML summary page with a method that is to be written. Then truncate and restore students who will be returning next year to studb. Hrdb stays empty.
     }
+
     public int generatePIN() {
         Random r = new Random();
         return r.nextInt(9000) + 1000;
@@ -157,7 +163,7 @@ public class Reader {
                 s = new Student(true, "No student found with ID " + id);
             } else if (getResultSetLength(rs) == 1) {
                 rs.next();
-                s = new Student(rs.getInt("StudentID"), rs.getString("Name"), rs.getInt("GraduationYear"), rs.getInt("PIN"));
+                s = new Student(rs.getInt("StudentID"), rs.getString("Name"), rs.getInt("GraduationYear"), rs.getInt("PIN"), rs.getString("Email"));
             } else {
                 System.out.println("Multiple matches found with ID " + id);
                 s = new Student(true, "Multiple matches found with ID " + id);
@@ -231,7 +237,7 @@ public class Reader {
     public void toggleApproval(int id) throws SQLException {
         try (PreparedStatement ps = connect.prepareStatement("UPDATE hrdb SET approved = !approved WHERE activityID=?;")) {
             ps.setInt(1, id);
-            
+
             ps.executeUpdate();
         }
     }
@@ -250,11 +256,12 @@ public class Reader {
     }
 
     public void updateStudent(Student s) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("UPDATE studb SET Name=?, GraduationYear=?, PIN=? WHERE StudentID=?;")) {
+        try (PreparedStatement ps = connect.prepareStatement("UPDATE studb SET Name=?, GraduationYear=?, PIN=?, Email=? WHERE StudentID=?;")) {
             ps.setString(1, s.getName());
             ps.setInt(2, s.getGradYear());
             ps.setInt(3, s.getPIN());
-            ps.setInt(4, s.getID());
+            ps.setString(4, s.getEmail());
+            ps.setInt(5, s.getID());
             ps.executeUpdate();
         }
     }

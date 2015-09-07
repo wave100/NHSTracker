@@ -25,7 +25,8 @@ public class IDMatcher {
 
     public IDMatcher() {
         r = new Reader();
-        Database db = new Database();
+        Database db = null;
+        db = new Database();
         try {
             connect = db.getConnection();
         } catch (SQLException ex) {

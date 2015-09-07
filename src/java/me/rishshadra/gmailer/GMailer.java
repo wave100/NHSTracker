@@ -31,7 +31,7 @@ public class GMailer {
 
     public GMailer() {
         try {
-            gmail = TokenHolder.getGmail();
+            gmail = TokenHolder.getGmail(); //TokenHolder is a class that authenticates with Google and returns a gmail object. It is not included in the repository because it's got my API keys in it.
         } catch (IOException ex) {
             Logger.getLogger(GMailer.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -76,10 +76,10 @@ public class RequestHandler extends HttpServlet {
     public void addStudent(PrintWriter out, HttpServletRequest request) {
         Reader r = new Reader();
         Map<String, String[]> map = request.getParameterMap();
-        if (request.getParameterMap().size() == 3) {
-            if (map.containsKey("name") && map.containsKey("graduationyear")) {
+        if (request.getParameterMap().size() == 4) {
+            if (map.containsKey("name") && map.containsKey("graduationyear") && map.containsKey("email")) {
                 try {
-                    r.addStudent(map.get("name")[0], Integer.parseInt(map.get("graduationyear")[0]));
+                    r.addStudent(map.get("name")[0], Integer.parseInt(map.get("graduationyear")[0]), map.get(("email"))[0]);
                 } catch (SQLException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }

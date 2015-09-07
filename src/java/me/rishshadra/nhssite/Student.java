@@ -20,9 +20,9 @@ public class Student {
     private boolean empty;
 
     private int gradyear, id, pin;
-    private String name, error;
+    private String name, email, error;
 
-    public Student(int i, String n, int g, int p) {
+    public Student(int i, String n, int g, int p, String e) {
         id = i;
         name = n;
         gradyear = g;
@@ -62,6 +62,10 @@ public class Student {
         }
         
         return sum;
+    }
+    
+    public String getEmail() {
+        return email;
     }
     
     public String getError() {
@@ -117,6 +121,10 @@ public class Student {
         return empty;
     }
     
+    public void setEmail(String e) {
+        email = e;
+    }
+    
     public void setGradYear(int y) {
         gradyear = y;
     }
@@ -132,7 +140,9 @@ public class Student {
 
     public void update() {
         try {
-            new Reader().updateStudent(this);
+            Reader r = new Reader();
+            r.updateStudent(this);
+            r.close();
         } catch (SQLException ex) {
             Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
         }
