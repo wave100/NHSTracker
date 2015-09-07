@@ -35,14 +35,14 @@ and open the template in the editor.
 
             function setStudentList(url) {
                 if (document.getElementById("belowQuota").checked) {
-                    document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value + "&belowQuota");
+                    document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value + "&adminpass=" + document.getElementById("adminpass").value + "&belowQuota");
                 } else {
-                    document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value);
+                    document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value + "&adminpass=" + document.getElementById("adminpass").value);
                 }
             }
 
             function viewHours(id) {
-                document.getElementById("resultFrame").setAttribute("src", hoursURL + id);
+                document.getElementById("resultFrame").setAttribute("src", hoursURL + id + "&adminpass=" + document.getElementById("adminpass").value);
             }
 
         </script>    
@@ -72,7 +72,7 @@ and open the template in the editor.
                 </div>
                 <div id="navbar" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="index.jsp">View</a></li>
+                        <li><a href="index.jsp">View</a></li>
                         <li><a href="submit.jsp">Submit</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
@@ -88,7 +88,9 @@ and open the template in the editor.
                 <%}%>
 
             <form>
-                <input id="studentName" type="text" name="studentname" placeholder="Search" oninput="setStudentList(searchURL)"/> Only show students under quota: <input id="belowQuota" name="belowQuota" type="checkbox" onClick="setStudentList(searchURL);" />
+                <input id="studentName" type="text" name="studentname" placeholder="Search" oninput="setStudentList(searchURL)" />
+                <input id="adminpass" type="password" name="adminpass" placeholder="Admin Password" />
+                Only show students under quota: <input id="belowQuota" name="belowQuota" type="checkbox" onClick="setStudentList(searchURL);" />
             </form>
 
             <iframe id="resultFrame" src="RequestHandler?action=searchstudents&studentname="></iframe>

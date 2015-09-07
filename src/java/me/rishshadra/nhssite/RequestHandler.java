@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import me.rishshadra.gmailer.GMailer;
 import me.rishshadra.nhssite.consts.Consts;
+import me.rishshadra.nhssite.consts.Credentials;
 
 /**
  *
@@ -185,52 +186,46 @@ public class RequestHandler extends HttpServlet {
     }
 
     public void getHoursAdmin(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
-        Reader r = new Reader();
-        try {
-            Student s = r.getStudentByID(Integer.parseInt(request.getParameter("id")));
-            //System.out.println("1");
-            if (!s.isEmpty()) {
-                //System.out.println("2");
-                DecimalFormat df = new DecimalFormat("###.##");
-                //System.out.println("2.1");
-                String checkboxFormat;
-                //System.out.println("2.2");
-                out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
-                //System.out.println("2.3");
-                out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
-                //System.out.println("2.4");
-                out.println("<table class=\"table table-striped\">");
-                //System.out.println("2.5");
-                out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
-                //System.out.println("2.6");
-                for (Activity a : (ArrayList<Activity>) s.getActivities()) {
-                    //System.out.println("3");
-                    if (a.isApproved()) {
-                        checkboxFormat = "checked=\"checked\"";
-                        //System.out.println("4");
-                    } else {
-                        //System.out.println("5");
-                        checkboxFormat = "";
+
+        if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
+            System.out.println("Admin authentication successful. Displaying page.");
+
+            Reader r = new Reader();
+
+            try {
+                Student s = r.getStudentByID(Integer.parseInt(request.getParameter("id")));
+                if (!s.isEmpty()) {
+                    DecimalFormat df = new DecimalFormat("###.##");
+                    String checkboxFormat;
+                    out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
+                    out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
+                    out.println("<table class=\"table table-striped\">");
+                    out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
+                    for (Activity a : (ArrayList<Activity>) s.getActivities()) {
+                        if (a.isApproved()) {
+                            checkboxFormat = "checked=\"checked\"";
+                        } else {
+                            checkboxFormat = "";
+                        }
+                        out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity\"/><input type=\"hidden\" name=\"id\" value=\"" + a.getStudentID() + "\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
                     }
-                    out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity\"/><input type=\"hidden\" name=\"id\" value=\"" + a.getStudentID() + "\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
-                    //System.out.println("6");
+                    out.println("</table>");
+                    out.println("<h4>Total: " + s.getHours() + " hours.</h4>");
+                } else {
+                    out.println(s.getError());
                 }
-                out.println("</table>");
-                //System.out.println("7");
-                out.println("<h4>Total: " + s.getHours() + " hours.</h4>");
-                //System.out.println("8");
-            } else {
-                //System.out.println("9");
-                out.println(s.getError());
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        //System.out.println("10");
-        try {
-            r.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+
+            try {
+                r.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            System.out.println("Admin authentication failed.");
+            out.println("<h1>The password that you entered was incorrect.</h1>");
         }
     }
 
@@ -255,8 +250,12 @@ public class RequestHandler extends HttpServlet {
     }
 
     public void removeStudent(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("removestudent is unimplemented.");
-        out.println("removestudent is unimplemented.");
+        Reader r = new Reader();
+        try {
+            r.removeStudent(Integer.valueOf(request.getParameter("studentid")));
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void searchStudents(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
@@ -267,8 +266,9 @@ public class RequestHandler extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
-        out.println("<style>.notEnoughSubmitted{color: #0000EE !important;} a{color: #B2B2FA;} a:visited{color: #B2B2FA;}</style>");
+
         if (request.getParameterMap().containsKey("belowQuota")) {
+            out.println("<style>.notEnoughSubmitted{color: #0000EE !important;} a{color: #B2B2FA;} a:visited{color: #B2B2FA;}</style>");
             for (Student s : results) {
                 if (s.getApprovedHours() < 10) {
                     if (s.getHours() >= 10) {
@@ -279,6 +279,7 @@ public class RequestHandler extends HttpServlet {
                 }
             }
         } else {
+            out.println("<style>a{color: #0000EE;} a:visited{color: #0000EE;}</style>");
             for (Student s : results) {
                 out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
             }
@@ -291,18 +292,27 @@ public class RequestHandler extends HttpServlet {
     }
 
     public void toggleApproval(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
-        Reader r = new Reader();
-        try {
-            r.toggleApproval(Integer.parseInt(request.getParameter("activityid")));
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+
+        if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
+            System.out.println("Admin authentication successful.");
+            Reader r = new Reader();
+            try {
+                r.toggleApproval(Integer.parseInt(request.getParameter("activityid")));
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            getHoursAdmin(out, request, response);
+            try {
+                r.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            System.out.println("Admin authentication failed.");
+            out.println("<h1>The password that you entered was incorrect.</h1>");
         }
-        getHoursAdmin(out, request, response);
-        try {
-            r.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
     }
 
     public void updateActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
