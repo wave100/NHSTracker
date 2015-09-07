@@ -53,7 +53,14 @@ public class RequestHandler extends HttpServlet {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } else {
-                System.out.println("Processing Error.");
+                System.out.println("Processing Error (Student could not be matched to ID, activity not added. Activity information to follow:)");
+                System.out.println("\tID:\t\t\t" + id);
+                System.out.println("\tHours:\t\t\t" + Float.parseFloat(request.getParameter("hours")));
+                System.out.println("\tDescription:\t\t\t" + request.getParameter("description"));
+                System.out.println("\tObs. Name:\t\t\t" + request.getParameter("obsname"));
+                System.out.println("\tObs. Email:\t\t\t" + request.getParameter("obsemail"));
+                System.out.println("\tApproval:\t\t\tfalse");
+                System.out.println("\tGroup Status:\t\t\t" + group);
                 try {
                     request.setAttribute("error", "<strong>Error!</strong> No such user found. Please check the spelling of your name and ensure that you are a member of the NHS. If the issue continues, contact rshadra@gmail.com.");
                     request.setAttribute("error-type", "danger");
