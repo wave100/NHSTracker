@@ -8,14 +8,6 @@
         <servlet-name>DatabaseStatus</servlet-name>
         <servlet-class>me.rishshadra.nhssite.DatabaseStatus</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>MatchHours</servlet-name>
-        <servlet-class>me.rishshadra.nhssite.MatchHours</servlet-class>
-    </servlet>
-    <servlet>
-        <servlet-name>DBCleanup</servlet-name>
-        <servlet-class>me.rishshadra.nhssite.DBCleanup</servlet-class>
-    </servlet>
     <servlet-mapping>
         <servlet-name>RequestHandler</servlet-name>
         <url-pattern>/RequestHandler</url-pattern>
@@ -23,14 +15,6 @@
     <servlet-mapping>
         <servlet-name>DatabaseStatus</servlet-name>
         <url-pattern>/DatabaseStatus</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>MatchHours</servlet-name>
-        <url-pattern>/MatchHours</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>DBCleanup</servlet-name>
-        <url-pattern>/DBCleanup</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

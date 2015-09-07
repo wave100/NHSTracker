@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.rishshadra.nhssite;
+package me.rishshadra.nhssite.utils;
 
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -13,6 +13,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.rishshadra.nhssite.Database;
+import me.rishshadra.nhssite.Reader;
+import me.rishshadra.nhssite.Student;
 
 /**
  *
@@ -23,6 +26,11 @@ public class IDMatcher {
     private Connection connect = null;
     private Reader r;
 
+    public static void main(String[] args) {
+        IDMatcher idm = new IDMatcher();
+        // Whatever you want to do here.
+    }
+    
     public IDMatcher() {
         r = new Reader();
         Database db = null;

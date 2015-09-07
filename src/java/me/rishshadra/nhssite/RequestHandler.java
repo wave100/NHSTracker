@@ -54,8 +54,8 @@ public class RequestHandler extends HttpServlet {
                 }
             } else {
                 System.out.println("Processing Error (Student could not be matched to ID, activity not added. Activity information to follow:)");
-                System.out.println("\tID:\t\t\t" + id);
-                System.out.println("\tHours:\t\t\t" + Float.parseFloat(request.getParameter("hours")));
+                System.out.println("\tID:\t\t\t\t" + id);
+                System.out.println("\tHours:\t\t\t\t" + Float.parseFloat(request.getParameter("hours")));
                 System.out.println("\tDescription:\t\t\t" + request.getParameter("description"));
                 System.out.println("\tObs. Name:\t\t\t" + request.getParameter("obsname"));
                 System.out.println("\tObs. Email:\t\t\t" + request.getParameter("obsemail"));

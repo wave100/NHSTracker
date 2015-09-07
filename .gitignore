@@ -14,3 +14,4 @@ hs_err_pid*
 /src/java/me/rishshadra/gmailer/TokenHolder.java
 /src/java/me/rishshadra/nhssite/EmailMatcher.java
 /src/java/me/rishshadra/gmailer/MiscTests.java
+/src/java/me/rishshadra/nhssite/MiscTests.java
