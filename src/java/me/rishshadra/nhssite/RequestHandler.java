@@ -63,13 +63,13 @@ public class RequestHandler extends HttpServlet {
 
                         String hourPlural1, hourPlural2;
 
-                        if (Integer.valueOf(request.getParameter("hours")) == 1) {
+                        if (Float.valueOf(request.getParameter("hours")).intValue() == 1) {
                             hourPlural1 = "hour";
                         } else {
                             hourPlural1 = "hours";
                         }
 
-                        if ((s.getHours() + Integer.valueOf(request.getParameter("hours"))) == 1) {
+                        if ((s.getHours() + Float.valueOf(request.getParameter("hours")).intValue()) == 1) {
                             hourPlural2 = "hour";
                         } else {
                             hourPlural2 = "hours";
@@ -92,11 +92,12 @@ public class RequestHandler extends HttpServlet {
 
             } else {
                 try {
-                    mail.sendMessage(Consts.SUPPORT_EMAIL, "[NHSTracker-ERROR]", "Student could not be matched to ID, activity not added. Activity information to follow: \n ID: " + id + "\nHours: " + request.getParameter("hours") + "\nDescription: " + request.getParameter("description") + "\nObs. Name: " + request.getParameter("obsname") + "\nObs. Email: " + request.getParameter("obsemail") + "\nApproval: " + "false" + "\nGroup Status: " + group);
+                    mail.sendMessage(Consts.SUPPORT_EMAIL, "[NHSTracker-ERROR]", "Student could not be matched to ID, activity not added. Activity information to follow: <br /> " + "\tName:\t\t\t\t" + request.getParameter("name") + "<br />ID: " + id + "<br />Hours: " + request.getParameter("hours") + "<br />Description: " + request.getParameter("description") + "<br />Obs. Name: " + request.getParameter("obsname") + "<br />Obs. Email: " + request.getParameter("obsemail") + "<br />Approval: " + "false" + "<br />Group Status: " + group + "<br /> <br /> --");
                 } catch (MessagingException | IOException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 System.out.println("Processing Error (Student could not be matched to ID, activity not added. Activity information to follow:)");
+                System.out.println("\tName:\t\t\t\t" + request.getParameter("name"));
                 System.out.println("\tID:\t\t\t\t" + id);
                 System.out.println("\tHours:\t\t\t\t" + Float.parseFloat(request.getParameter("hours")));
                 System.out.println("\tDescription:\t\t\t" + request.getParameter("description"));
