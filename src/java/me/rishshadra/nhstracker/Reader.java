@@ -1,4 +1,4 @@
-package me.rishshadra.nhssite;
+package me.rishshadra.nhstracker;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.rishshadra.nhssite.consts.Consts;
+import me.rishshadra.nhstracker.consts.Consts;
 
 /**
  *

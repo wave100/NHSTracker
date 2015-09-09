@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.rishshadra.nhssite;
+package me.rishshadra.nhstracker;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -19,8 +19,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import me.rishshadra.gmailer.GMailer;
-import me.rishshadra.nhssite.consts.Consts;
-import me.rishshadra.nhssite.consts.Credentials;
+import me.rishshadra.nhstracker.consts.Consts;
+import me.rishshadra.nhstracker.consts.Credentials;
 
 /**
  *
@@ -389,37 +389,37 @@ public class RequestHandler extends HttpServlet {
 
             if (map.containsKey("action")) {
                 if (request.getParameter("action").equalsIgnoreCase("addstudent")) {
-                    System.out.println("Adding Student.");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Adding Student.");
                     addStudent(out, request);
                 } else if (request.getParameter("action").equalsIgnoreCase("removestudent")) {
-                    System.out.println("Removing Student.");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Removing Student.");
                     removeStudent(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("updatestudent")) {
-                    System.out.println("Updating Student.");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Updating Student.");
                     updateStudent(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("addactivity")) {
-                    System.out.println("Adding Activity");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Adding Activity");
                     addActivity(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("removeactivity")) {
-                    System.out.println("Removing Activity");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Removing Activity");
                     removeActivity(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("updateactivity")) {
-                    System.out.println("Updating Activity");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Updating Activity");
                     updateActivity(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("searchstudents")) {
-                    System.out.println("Searching Students");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Searching Students");
                     searchStudents(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("gethours")) {
-                    System.out.println("Getting Hours");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Getting Hours");
                     getHours(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("gethoursadmin")) {
-                    System.out.println("Getting Hours (Admin)");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Getting Hours (Admin)");
                     getHoursAdmin(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("approveactivity")) {
-                    System.out.println("Approving Activity");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Approving Activity");
                     toggleApproval(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("blank")) {
-                    System.out.println("Generating Blank Page");
+                    me.rishshadra.nhstracker.logging.Logger.logText("Generating Blank Page");
                     out.println("");
                 }
             } else {

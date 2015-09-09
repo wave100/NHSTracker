@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.rishshadra.nhssite.utils;
+package me.rishshadra.nhstracker.utils;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.rishshadra.nhssite.Reader;
-import me.rishshadra.nhssite.Student;
+import me.rishshadra.nhstracker.Reader;
+import me.rishshadra.nhstracker.Student;
 
 /**
  *
