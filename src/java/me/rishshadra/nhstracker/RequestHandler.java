@@ -32,7 +32,7 @@ public class RequestHandler extends HttpServlet {
     public void addActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
         GMailer mail = new GMailer();
-        if (request.getParameterMap().size() == 7 || request.getParameterMap().size() == 6) {
+        if (request.getParameterMap().size() == 8 || request.getParameterMap().size() == 7) {
             int id = -1;
             try {
                 id = StudentMatcher.attemptMatch(request.getParameter("name"));
@@ -44,12 +44,12 @@ public class RequestHandler extends HttpServlet {
                 group = true; //TODO: MAKE SURE THIS WORKS.
             }
             if (id > -1) {
-                Student s = new Student(true, "Could not create student with ID: " + id);
+                Student s; //= new Student(true, "Could not create student with ID: " + id);
 
                 try {
                     s = r.getStudentByID(id);
                     if (s.isEmpty()) {
-                        System.out.println(s.getError());
+                        me.rishshadra.nhstracker.logging.Logger.logText(s.getError());
                         try {
                             request.setAttribute("error", "<strong>Error!</strong> " + s.getError() + ".");
                             request.setAttribute("error-type", "danger");
@@ -58,35 +58,42 @@ public class RequestHandler extends HttpServlet {
                             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     } else {
-                        System.out.println("Student matched. Email: " + s.getEmail());
-                        r.addActivity(id, Float.parseFloat(request.getParameter("hours")), request.getParameter("description"), request.getParameter("obsname"), request.getParameter("obsemail"), false, group);
+                        me.rishshadra.nhstracker.logging.Logger.logText("Student matched. Email: " + s.getEmail());
 
-                        String hourPlural1, hourPlural2;
+                        if (Integer.parseInt(request.getParameter("pin")) == s.getPIN()) {
 
-                        if (Float.valueOf(request.getParameter("hours")).intValue() == 1) {
-                            hourPlural1 = "hour";
+                            r.addActivity(id, Float.parseFloat(request.getParameter("hours")), request.getParameter("description"), request.getParameter("obsname"), request.getParameter("obsemail"), false, group);
+
+                            String hourPlural1, hourPlural2;
+
+                            if (Float.valueOf(request.getParameter("hours")).intValue() == 1) {
+                                hourPlural1 = "hour";
+                            } else {
+                                hourPlural1 = "hours";
+                            }
+
+                            if ((s.getHours() + Float.valueOf(request.getParameter("hours")).intValue()) == 1) {
+                                hourPlural2 = "hour";
+                            } else {
+                                hourPlural2 = "hours";
+                            }
+
+                            mail.sendMessage(s.getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer " + hourPlural1 + ". You have submitted a total of " + Float.toString(s.getHours()) + " " + hourPlural2 + " this year. Click <a href=\" " + Consts.SITE_URL + "  /submit.jsp\">here</a> to submit more hours, or click <a href=\"" + Consts.SITE_URL + "/RequestHandler?action=gethours&id=" + id + "\">here</a> to view a breakdown of the hours that you have submitted so far. <br /> <br /> <h6>This is an automatically generated message. Replies to this email will be forwarded to the NHS officers. Not " + s.getName() + "? Send a message to " + Consts.SUPPORT_EMAIL + " and I'll sort it out.</h6> <br /> <br /> <h6>--</h6>"); //Format that float. Yes, that one.
+
+                            try {
+                                request.setAttribute("error", "<strong>Success!</strong> Hours successfully added to " + s.getName() + "'s total.");
+                                request.setAttribute("error-type", "success");
+                                request.getRequestDispatcher("submit.jsp").forward(request, response);
+                            } catch (ServletException | IOException ex) {
+                                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                            }
                         } else {
-                            hourPlural1 = "hours";
-                        }
-
-                        if ((s.getHours() + Float.valueOf(request.getParameter("hours")).intValue()) == 1) {
-                            hourPlural2 = "hour";
-                        } else {
-                            hourPlural2 = "hours";
-                        }
-
-                        mail.sendMessage(s.getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer " + hourPlural1 + ". You have submitted a total of " + Float.toString(s.getHours()) + " " + hourPlural2 + " this year. Click <a href=\" " + Consts.SITE_URL + "  /submit.jsp\">here</a> to submit more hours, or click <a href=\"" + Consts.SITE_URL + "/RequestHandler?action=gethours&id=" + id + "\">here</a> to view a breakdown of the hours that you have submitted so far. <br /> <br /> <h6>This is an automatically generated message. Replies to this email will be forwarded to the NHS officers. Not " + s.getName() + "? Send a message to " + Consts.SUPPORT_EMAIL + " and I'll sort it out.</h6> <br /> <br /> <h6>--</h6>"); //Format that float. Yes, that one.
-
-                        try {
-                            request.setAttribute("error", "<strong>Success!</strong> Hours successfully added to " + s.getName() + "'s total.");
-                            request.setAttribute("error-type", "success");
+                            request.setAttribute("error", "<strong>Error!</strong> An incorrect PIN was entered.");
+                            request.setAttribute("error-type", "danger");
                             request.getRequestDispatcher("submit.jsp").forward(request, response);
-                        } catch (ServletException | IOException ex) {
-                            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                         }
-
                     }
-                } catch (SQLException | MessagingException | IOException ex) { //On messagingexception, set message type to warning and tell user that email was unable to be sent.
+                } catch (SQLException | MessagingException | IOException | ServletException ex) { //On messagingexception, set message type to warning and tell user that email was unable to be sent.
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
@@ -96,15 +103,15 @@ public class RequestHandler extends HttpServlet {
                 } catch (MessagingException | IOException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println("Processing Error (Student could not be matched to ID, activity not added. Activity information to follow:)");
-                System.out.println("\tName:\t\t\t\t" + request.getParameter("name"));
-                System.out.println("\tID:\t\t\t\t" + id);
-                System.out.println("\tHours:\t\t\t\t" + Float.parseFloat(request.getParameter("hours")));
-                System.out.println("\tDescription:\t\t\t" + request.getParameter("description"));
-                System.out.println("\tObs. Name:\t\t\t" + request.getParameter("obsname"));
-                System.out.println("\tObs. Email:\t\t\t" + request.getParameter("obsemail"));
-                System.out.println("\tApproval:\t\t\tfalse");
-                System.out.println("\tGroup Status:\t\t\t" + group);
+                me.rishshadra.nhstracker.logging.Logger.logText("Processing Error (Student could not be matched to ID, activity not added. Activity information to follow:)");
+                me.rishshadra.nhstracker.logging.Logger.logText("\tName:\t\t\t\t" + request.getParameter("name"));
+                me.rishshadra.nhstracker.logging.Logger.logText("\tID:\t\t\t\t" + id);
+                me.rishshadra.nhstracker.logging.Logger.logText("\tHours:\t\t\t\t" + Float.parseFloat(request.getParameter("hours")));
+                me.rishshadra.nhstracker.logging.Logger.logText("\tDescription:\t\t\t" + request.getParameter("description"));
+                me.rishshadra.nhstracker.logging.Logger.logText("\tObs. Name:\t\t\t" + request.getParameter("obsname"));
+                me.rishshadra.nhstracker.logging.Logger.logText("\tObs. Email:\t\t\t" + request.getParameter("obsemail"));
+                me.rishshadra.nhstracker.logging.Logger.logText("\tApproval:\t\t\tfalse");
+                me.rishshadra.nhstracker.logging.Logger.logText("\tGroup Status:\t\t\t" + group);
                 try {
                     request.setAttribute("error", "<strong>Error!</strong> No such user found. Please check the spelling of your name and ensure that you are a member of the NHS. If the issue continues, contact " + Consts.SUPPORT_EMAIL + ".");
                     request.setAttribute("error-type", "danger");
@@ -114,7 +121,7 @@ public class RequestHandler extends HttpServlet {
                 }
             }
         } else {
-            System.out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (5+1 or 6+1) expected.");
+            me.rishshadra.nhstracker.logging.Logger.logText("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (5+1 or 6+1) expected.");
             out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (5+1 or 6+1) expected.");
         }
         try {
@@ -136,11 +143,11 @@ public class RequestHandler extends HttpServlet {
                 } catch (SQLException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                System.out.println("Student " + map.get("name")[0] + " added with graduation year of " + map.get("graduationyear")[0] + ".");
+                me.rishshadra.nhstracker.logging.Logger.logText("Student " + map.get("name")[0] + " added with graduation year of " + map.get("graduationyear")[0] + ".");
                 out.println("Student " + map.get("name")[0] + " added with graduation year of " + map.get("graduationyear")[0] + ".");
             }
         } else {
-            System.out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (2+1) expected."); //Add a function that returns a bool, true if lengths match false if lengths don't. If lengths don't, it does a println. Code = clean, problem = solved!
+            me.rishshadra.nhstracker.logging.Logger.logText("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (2+1) expected."); //Add a function that returns a bool, true if lengths match false if lengths don't. If lengths don't, it does a println. Code = clean, problem = solved!
             out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (2+1) expected.");
         }
         try {
@@ -153,34 +160,46 @@ public class RequestHandler extends HttpServlet {
     public void getHours(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
         try {
-            Student s = r.getStudentByID(Integer.parseInt(request.getParameter("id")));
-            if (!s.isEmpty()) {
-                DecimalFormat df = new DecimalFormat("###.##");
-                String checkboxFormat;
-                out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
-                out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
-                out.println("<table class=\"table table-striped\">");
-                out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
-                for (Activity a : (ArrayList<Activity>) s.getActivities()) {
-                    if (a.isApproved()) {
-                        checkboxFormat = "checked=\"checked\"";
+            if (r.getStudentsByName(request.getParameter("studentname")).size() == 1) {
+                try {
+                    Student s = r.getStudentsByName(request.getParameter("studentname")).get(0);
+                    if (Integer.parseInt(request.getParameter("pin")) == s.getPIN()) {
+                        if (!s.isEmpty()) {
+                            DecimalFormat df = new DecimalFormat("###.##");
+                            String checkboxFormat;
+                            out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
+                            out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
+                            out.println("<table class=\"table table-striped\">");
+                            out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
+                            for (Activity a : (ArrayList<Activity>) s.getActivities()) {
+                                if (a.isApproved()) {
+                                    checkboxFormat = "checked=\"checked\"";
+                                } else {
+                                    checkboxFormat = "";
+                                }
+                                out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<input type=\"checkbox\" disabled=\"disabled\" " + checkboxFormat + " />" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                            }
+                            out.println("</table>");
+
+                            out.println("<h4>Total: " + s.getHours() + " hours. (" + s.getApprovedHours() + " approved) </h4>");
+
+                        } else {
+                            out.println(s.getError());
+                        }
                     } else {
-                        checkboxFormat = "";
+                        out.println("Incorrect PIN entered.");
                     }
-                    out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<input type=\"checkbox\" disabled=\"disabled\" " + checkboxFormat + " />" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                } catch (SQLException ex) {
+                    Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NumberFormatException ex) {
+                    out.println("Incorrect PIN entered.");
+                } finally {
+                    r.close();
                 }
-                out.println("</table>");
-
-                out.println("<h4>Total: " + s.getHours() + " hours. (" + s.getApprovedHours() + " approved) </h4>");
-
+                
             } else {
-                out.println(s.getError());
+                out.println("Incorrect name entered.");
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        try {
-            r.close();
         } catch (SQLException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -189,7 +208,7 @@ public class RequestHandler extends HttpServlet {
     public void getHoursAdmin(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
 
         if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
-            System.out.println("Admin authentication successful. Displaying page.");
+            me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful. Displaying page.");
 
             Reader r = new Reader();
 
@@ -225,7 +244,7 @@ public class RequestHandler extends HttpServlet {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            System.out.println("Admin authentication failed.");
+            me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
             out.println("<h1>The password that you entered was incorrect.</h1>");
         }
     }
@@ -246,7 +265,7 @@ public class RequestHandler extends HttpServlet {
     }
 
     public void removeActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("removeactivity is unimplemented.");
+        me.rishshadra.nhstracker.logging.Logger.logText("removeactivity is unimplemented.");
         out.println("removeactivity is unimplemented.");
     }
 
@@ -260,42 +279,47 @@ public class RequestHandler extends HttpServlet {
     }
 
     public void searchStudents(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
-        Reader r = new Reader();
-        ArrayList<Student> results = new ArrayList<>();
-        try {
-            results = r.getStudentsByName(request.getParameter("studentname"));
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
+            Reader r = new Reader();
+            ArrayList<Student> results = new ArrayList<>();
+            try {
+                results = r.getStudentsByName(request.getParameter("studentname"));
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        if (request.getParameterMap().containsKey("belowQuota")) {
-            out.println("<style>.notEnoughSubmitted{color: #0000EE !important;} a{color: #B2B2FA;} a:visited{color: #B2B2FA;}</style>");
-            for (Student s : results) {
-                if (s.getApprovedHours() < 10) {
-                    if (s.getHours() >= 10) {
-                        out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
-                    } else {
-                        out.println("<a href=\"#\" class=\"notEnoughSubmitted\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
+            if (request.getParameterMap().containsKey("belowQuota")) {
+                out.println("<style>.notEnoughSubmitted{color: #0000EE !important;} a{color: #B2B2FA;} a:visited{color: #B2B2FA;}</style>");
+                for (Student s : results) {
+                    if (s.getApprovedHours() < 10) {
+                        if (s.getHours() >= 10) {
+                            out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
+                        } else {
+                            out.println("<a href=\"#\" class=\"notEnoughSubmitted\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
+                        }
                     }
                 }
+            } else {
+                out.println("<style>a{color: #0000EE;} a:visited{color: #0000EE;}</style>");
+                for (Student s : results) {
+                    out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
+                }
+            }
+            try {
+                r.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            out.println("<style>a{color: #0000EE;} a:visited{color: #0000EE;}</style>");
-            for (Student s : results) {
-                out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
-            }
-        }
-        try {
-            r.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
+            out.println("<h1>The password that you entered was incorrect.</h1>");
         }
     }
 
     public void toggleApproval(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
 
         if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
-            System.out.println("Admin authentication successful.");
+            me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful.");
             Reader r = new Reader();
             try {
                 r.toggleApproval(Integer.parseInt(request.getParameter("activityid")));
@@ -310,7 +334,7 @@ public class RequestHandler extends HttpServlet {
             }
 
         } else {
-            System.out.println("Admin authentication failed.");
+            me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
             out.println("<h1>The password that you entered was incorrect.</h1>");
         }
 
@@ -339,7 +363,7 @@ public class RequestHandler extends HttpServlet {
         if (request.getParameterMap().size() == 5) {
             Student s = new Student(true, "This feature has not yet been implemented.");
         } else {
-            System.out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (4+1) expected.");
+            me.rishshadra.nhstracker.logging.Logger.logText("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (4+1) expected.");
             out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (4+1) expected.");
         }
     }
@@ -423,7 +447,7 @@ public class RequestHandler extends HttpServlet {
                     out.println("");
                 }
             } else {
-                System.out.println("No action specified.");
+                me.rishshadra.nhstracker.logging.Logger.logText("No action specified.");
                 out.println("No action specified.");
             }
         } catch (NumberFormatException ex) {

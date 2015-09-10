@@ -57,13 +57,14 @@ and open the template in the editor.
                 <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
             <%}%>
 
-            <form method="POST" action="RequestHandler">
+            <form method="POST" action="RequestHandler" id="activityform">
                 <input type="hidden" name="action" value="addactivity" />
-                <input type="text" name="name" placeholder="Your Name" required /> <br />
+                <input type="text" name="name" placeholder="Your Name" required /> <input type="password" name="pin" placeholder="PIN" style="width: 80px;" maxlength="4" required /> <br />
                 <input type="text" name="obsname" placeholder="Observer Name" required /> <br />
                 <input type="text" name="obsemail" placeholder="Observer Email" required /> <br />
-                <input type="number" step="any" min="0" name="hours" placeholder="Hours Completed" required /> <br />
-                <input type="text" name="description" placeholder="Description" required /> <br /> <br />
+                <input type="number" step="any" min="0" name="hours" placeholder="Hours Completed" required /> <br /> <br />
+                <!--<input type="text" name="description" placeholder="Description" style="width: 254px; height: 100px;" required /> <br /> <br />-->
+                <textarea name="description" placeholder="Description" style="resize: none; width: 254px; height: 100px;" required></textarea>
                 <div id="groupdiv">Was this project a group project? &nbsp;&nbsp; <input type="checkbox" name="groupproj" id="group" /> <br /> <br />
 
                     <input type="submit" /> &nbsp;&nbsp; By submitting this form, I swear that all of the information in this form is truthful.</div>

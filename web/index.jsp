@@ -30,15 +30,10 @@ and open the template in the editor.
 
 
         <script language="javascript">
-            var searchURL = "RequestHandler?action=searchstudents&studentname=";
-            var hoursURL = "RequestHandler?action=gethours&id=";
+            var hoursURL = "RequestHandler?action=gethours&studentname=";
 
-            function setStudentList(url) {
-                document.getElementById("resultFrame").setAttribute("src", url + document.getElementById("studentName").value);
-            }
-
-            function viewHours(id) {
-                document.getElementById("resultFrame").setAttribute("src", hoursURL + id);
+            function getHours() {
+                document.getElementById("resultFrame").setAttribute("src", hoursURL + document.getElementById("studentName").value + "&pin=" + document.getElementById("studentPIN").value);
             }
 
         </script>    
@@ -81,12 +76,12 @@ and open the template in the editor.
 
             <% if (request.getAttribute("error") == null) {%>
             <!--<frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>-->
-                <%} else {%>
+            <%} else {%>
             <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
                 <%}%>
 
             <form>
-                <input id="studentName" type="text" name="studentname" placeholder="Student Name" oninput="setStudentList(searchURL)"/>
+                <input id="studentName" type="text" name="studentname" placeholder="Name" required/> <input id="studentPIN" type="password" name="pin" placeholder="PIN" style="width: 80px;" maxlength="4" required /> <input type="button" onClick="getHours()" value="Get Hours" />
             </form>
 
             <iframe id="resultFrame" src="RequestHandler?action=blank" seamless="seamless" scrolling="no"></iframe>

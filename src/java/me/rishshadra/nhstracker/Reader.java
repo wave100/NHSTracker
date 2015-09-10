@@ -174,7 +174,7 @@ public class Reader {
         return s;
     }
 
-    public ArrayList getStudentsByName(String name) throws SQLException {
+    public ArrayList<Student> getStudentsByName(String name) throws SQLException {
         ArrayList<Student> students = new ArrayList<>();
         ResultSet rs;
         try (PreparedStatement ps = connect.prepareStatement("SELECT StudentID FROM studb WHERE Name LIKE ?;")) {
