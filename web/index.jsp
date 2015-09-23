@@ -81,7 +81,7 @@ and open the template in the editor.
                 <%}%>
 
             <form>
-                <input id="studentName" type="text" name="studentname" placeholder="Name" required/> <input id="studentPIN" type="password" name="pin" placeholder="PIN" style="width: 80px;" maxlength="4" required /> <input type="button" onClick="getHours()" value="Get Hours" />
+                <input id="studentName" type="text" name="studentname" placeholder="Name" <% if (request.getAttribute("name") != null) {out.println("value=\"" + request.getAttribute("name") + "\"");} %>required/> <input id="studentPIN" type="password" name="pin" placeholder="PIN" style="width: 80px;" maxlength="4" required /> <input type="button" onClick="getHours()" value="Get Hours" />
             </form>
 
             <iframe id="resultFrame" src="RequestHandler?action=blank" seamless="seamless" scrolling="no"></iframe>

@@ -18,7 +18,7 @@ import me.rishshadra.nhstracker.consts.Consts;
  *
  * @author Rish Shadra <rshadra@gmail.com>
  */
-public class GroupMailer {
+public class LegacyGroupMailer {
 
     public static void main(String[] args) throws SQLException, MessagingException, IOException {
         GMailer mail = new GMailer();

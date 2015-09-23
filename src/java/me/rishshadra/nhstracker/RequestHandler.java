@@ -78,7 +78,7 @@ public class RequestHandler extends HttpServlet {
                                 hourPlural2 = "hours";
                             }
 
-                            mail.sendMessage(s.getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer " + hourPlural1 + ". You have submitted a total of " + Float.toString(s.getHours()) + " " + hourPlural2 + " this year. Click <a href=\" " + Consts.SITE_URL + "  /submit.jsp\">here</a> to submit more hours, or click <a href=\"" + Consts.SITE_URL + "/RequestHandler?action=gethours&id=" + id + "\">here</a> to view a breakdown of the hours that you have submitted so far. <br /> <br /> <h6>This is an automatically generated message. Replies to this email will be forwarded to the NHS officers. Not " + s.getName() + "? Send a message to " + Consts.SUPPORT_EMAIL + " and I'll sort it out.</h6> <br /> <br /> <h6>--</h6>"); //Format that float. Yes, that one.
+                            mail.sendMessage(s.getEmail(), "Hour Submission Confirmation", "You have successfully submitted " + request.getParameter("hours") + " volunteer " + hourPlural1 + ". You have submitted a total of " + Float.toString(s.getHours()) + " " + hourPlural2 + " this year. Click <a href=\" " + Consts.SITE_URL + "  /submit.jsp\">here</a> to submit more hours, or click <a href=\"" + Consts.SITE_URL + "/RequestHandler?action=gethours&studentname=" + s.getName() + "&pin=" + s.getPIN() + "\">here</a> to view a breakdown of the hours that you have submitted so far. <br /> <br /> <h6>This is an automatically generated message. Replies to this email will be forwarded to the NHS officers. Not " + s.getName() + "? Send a message to " + Consts.SUPPORT_EMAIL + " and I'll sort it out.</h6> <br /> <br /> <h6>--</h6>"); //Format that float. Yes, that one.
 
                             try {
                                 request.setAttribute("error", "<strong>Success!</strong> Hours successfully added to " + s.getName() + "'s total.");
@@ -138,7 +138,7 @@ public class RequestHandler extends HttpServlet {
         if (request.getParameterMap().size() == 4) {
             if (map.containsKey("name") && map.containsKey("graduationyear") && map.containsKey("email")) {
                 try {
-                    r.addStudent(map.get("name")[0], Integer.parseInt(map.get("graduationyear")[0]), map.get(("email"))[0]);
+                    r.addStudent(map.get("name")[0], Integer.parseInt(map.get("graduationyear")[0]), map.get(("email"))[0], Consts.CURRENT_INDUCTION_SECTION);
                     //email.sendMessage(map.get("email")[0], "Welcome to the National Honor Society!", "Dear ");
                 } catch (SQLException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
@@ -159,93 +159,106 @@ public class RequestHandler extends HttpServlet {
 
     public void getHours(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
-        try {
-            if (r.getStudentsByName(request.getParameter("studentname")).size() == 1) {
-                try {
-                    Student s = r.getStudentsByName(request.getParameter("studentname")).get(0);
-                    if (Integer.parseInt(request.getParameter("pin")) == s.getPIN()) {
-                        if (!s.isEmpty()) {
-                            DecimalFormat df = new DecimalFormat("###.##");
-                            String checkboxFormat;
-                            out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
-                            out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
-                            out.println("<table class=\"table table-striped\">");
-                            out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
-                            for (Activity a : (ArrayList<Activity>) s.getActivities()) {
-                                if (a.isApproved()) {
-                                    checkboxFormat = "checked=\"checked\"";
-                                } else {
-                                    checkboxFormat = "";
-                                }
-                                out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<input type=\"checkbox\" disabled=\"disabled\" " + checkboxFormat + " />" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
-                            }
-                            out.println("</table>");
-
-                            out.println("<h4>Total: " + s.getHours() + " hours. (" + s.getApprovedHours() + " approved) </h4>");
-
-                        } else {
-                            out.println(s.getError());
-                        }
-                    } else {
-                        out.println("Incorrect PIN entered.");
-                    }
-                } catch (SQLException ex) {
-                    Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (NumberFormatException ex) {
-                    out.println("Incorrect PIN entered.");
-                } finally {
-                    r.close();
-                }
-                
-            } else {
-                out.println("Incorrect name entered.");
+        if (request.getParameterMap().containsKey("id")) {
+            try {
+                request.setAttribute("name", r.getStudentByID(Integer.parseInt(request.getParameter("id"))).getName());
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+            } catch (ServletException | IOException | SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } catch (SQLException ex) {
-            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } else {
+            try {
+                if (r.getStudentsByName(request.getParameter("studentname")).size() == 1) {
+                    try {
+                        Student s = r.getStudentsByName(request.getParameter("studentname")).get(0);
+                        if (Integer.parseInt(request.getParameter("pin")) == s.getPIN()) {
+                            if (!s.isEmpty()) {
+                                DecimalFormat df = new DecimalFormat("###.##");
+                                String checkboxFormat;
+                                out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
+                                out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
+                                out.println("<table class=\"table table-striped\">");
+                                out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
+                                for (Activity a : (ArrayList<Activity>) s.getActivities()) {
+                                    if (a.isApproved()) {
+                                        checkboxFormat = "checked=\"checked\"";
+                                    } else {
+                                        checkboxFormat = "";
+                                    }
+                                    out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<input type=\"checkbox\" disabled=\"disabled\" " + checkboxFormat + " />" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                                }
+                                out.println("</table>");
+
+                                out.println("<h4>Total: " + s.getHours() + " hours. (" + s.getApprovedHours() + " approved) </h4>");
+
+                            } else {
+                                out.println(s.getError());
+                            }
+                        } else {
+                            out.println("Incorrect PIN entered.");
+                        }
+                    } catch (SQLException ex) {
+                        Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (NumberFormatException ex) {
+                        out.println("Incorrect PIN entered.");
+                    } finally {
+                        r.close();
+                    }
+
+                } else {
+                    out.println("Incorrect name entered.");
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
     public void getHoursAdmin(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
+                me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful. Displaying page.");
 
-        if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
-            me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful. Displaying page.");
+                Reader r = new Reader();
 
-            Reader r = new Reader();
-
-            try {
-                Student s = r.getStudentByID(Integer.parseInt(request.getParameter("id")));
-                if (!s.isEmpty()) {
-                    DecimalFormat df = new DecimalFormat("###.##");
-                    String checkboxFormat;
-                    out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
-                    out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
-                    out.println("<table class=\"table table-striped\">");
-                    out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
-                    for (Activity a : (ArrayList<Activity>) s.getActivities()) {
-                        if (a.isApproved()) {
-                            checkboxFormat = "checked=\"checked\"";
-                        } else {
-                            checkboxFormat = "";
+                try {
+                    Student s = r.getStudentByID(Integer.parseInt(request.getParameter("id")));
+                    if (!s.isEmpty()) {
+                        DecimalFormat df = new DecimalFormat("###.##");
+                        String checkboxFormat;
+                        out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
+                        out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
+                        out.println("<table class=\"table table-striped\">");
+                        out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
+                        for (Activity a : (ArrayList<Activity>) s.getActivities()) {
+                            if (a.isApproved()) {
+                                checkboxFormat = "checked=\"checked\"";
+                            } else {
+                                checkboxFormat = "";
+                            }
+                            out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity\"/><input type=\"hidden\" name=\"id\" value=\"" + a.getStudentID() + "\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
                         }
-                        out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity\"/><input type=\"hidden\" name=\"id\" value=\"" + a.getStudentID() + "\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                        out.println("</table>");
+                        out.println("<h4>Total: " + s.getHours() + " hours.</h4>");
+                    } else {
+                        out.println(s.getError());
                     }
-                    out.println("</table>");
-                    out.println("<h4>Total: " + s.getHours() + " hours.</h4>");
-                } else {
-                    out.println(s.getError());
+                } catch (SQLException ex) {
+                    Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            } catch (SQLException ex) {
-                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
-            }
 
-            try {
-                r.close();
-            } catch (SQLException ex) {
-                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                    r.close();
+                } catch (SQLException ex) {
+                    Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
+                out.println("<h1>The password that you entered was incorrect.</h1>");
             }
-        } else {
-            me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
-            out.println("<h1>The password that you entered was incorrect.</h1>");
+        } catch (NullPointerException ex) {
+            me.rishshadra.nhstracker.logging.Logger.logText("Failed to get hours as admin. Insufficient or incorrect parameters.");
+            out.println("Incorrect or insufficient parameters. If you are seeing this message, contact " + Consts.SUPPORT_EMAIL + " with a description of what you were doing before this error occurred.");
         }
     }
 
@@ -409,7 +422,7 @@ public class RequestHandler extends HttpServlet {
 
         Map<String, String[]> map = request.getParameterMap();
 
-        try (PrintWriter out = response.getWriter()) { //Print some HTML stuff before to clean up code below.
+        try (PrintWriter out = response.getWriter()) { //Print HTML style and head over here to clean up code in methods called below.
 
             if (map.containsKey("action")) {
                 if (request.getParameter("action").equalsIgnoreCase("addstudent")) {
