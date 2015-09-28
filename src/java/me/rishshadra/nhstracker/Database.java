@@ -43,7 +43,7 @@ public class Database {
         } catch (NamingException ex) {
             System.out.println("Local connection detected.");
             localConnection = true;
-            //Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -65,7 +65,6 @@ public class Database {
         } catch (ClassNotFoundException | SQLException ex) {
             Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         return c;
     }
 }
