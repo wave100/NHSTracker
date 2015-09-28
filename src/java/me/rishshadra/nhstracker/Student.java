@@ -19,15 +19,16 @@ public class Student {
     private ArrayList<Activity> activities;
     private boolean empty;
 
-    private int gradyear, id, pin;
+    private int gradyear, inductionyear, id, pin;
     private String name, email, error;
 
-    public Student(int i, String n, int g, int p, String e) {
+    public Student(int i, String n, int g, int p, String e, int iy) {
         id = i;
         name = n;
         gradyear = g;
         pin = p;
         email = e;
+        inductionyear = iy;
     }
 
     public Student(boolean b, String e) {
@@ -109,6 +110,10 @@ public class Student {
     public int getID() {
         return id;
     }
+    
+    public int getInductionYear() {
+        return inductionyear;
+    }
 
     public String getName() {
         return name;
@@ -130,6 +135,10 @@ public class Student {
         gradyear = y;
     }
 
+    public void setInductionYear(int iy) {
+        inductionyear = iy;
+    }
+    
     public boolean setPin(int i) {
         if (String.valueOf(i).length() == 4) {
             pin = i;

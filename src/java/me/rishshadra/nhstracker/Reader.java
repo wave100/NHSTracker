@@ -80,23 +80,25 @@ public class Reader {
         }
     }
 
-    public void addStudent(String n, int g, String e) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO studb VALUES(0,?,?,?,?);")) {
+    public void addStudent(String n, int g, String e, int iy) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO studb VALUES(0,?,?,?,?,?);")) {
             ps.setString(1, n);
             ps.setInt(2, g);
             ps.setInt(3, generatePIN());
             ps.setString(4, e);
+            ps.setInt(5, iy);
 
             ps.executeUpdate();
         }
     }
 
     public void addStudent(Student s) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO studb VALUES(0,?,?,?,?);")) {
+        try (PreparedStatement ps = connect.prepareStatement("INSERT INTO studb VALUES(0,?,?,?,?,?);")) {
             ps.setString(1, s.getName());
             ps.setInt(2, s.getGradYear());
             ps.setInt(3, generatePIN());
             ps.setString(4, s.getEmail());
+            ps.setInt(5, s.getInductionYear());
 
             ps.executeUpdate();
         }
@@ -164,7 +166,7 @@ public class Reader {
                 s = new Student(true, "No student found with ID " + id);
             } else if (getResultSetLength(rs) == 1) {
                 rs.next();
-                s = new Student(rs.getInt("StudentID"), rs.getString("Name"), rs.getInt("GraduationYear"), rs.getInt("PIN"), rs.getString("Email"));
+                s = new Student(rs.getInt("StudentID"), rs.getString("Name"), rs.getInt("GraduationYear"), rs.getInt("PIN"), rs.getString("Email"), rs.getInt("InductionYear"));
             } else {
                 System.out.println("Multiple matches found with ID " + id);
                 s = new Student(true, "Multiple matches found with ID " + id);
@@ -174,7 +176,21 @@ public class Reader {
         return s;
     }
 
-    public ArrayList getStudentsByName(String name) throws SQLException {
+    public ArrayList<Student> getStudentsByInductionYear(int year) throws SQLException {
+        ArrayList<Student> students = new ArrayList<>();
+        ResultSet rs;
+        try (PreparedStatement ps = connect.prepareStatement("SELECT StudentID FROM studb WHERE InductionYear = ?;")) {
+            ps.setInt(1, year);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                students.add(getStudentByID(rs.getInt("StudentID")));
+            }
+        }
+        rs.close();
+        return students;
+    }
+    
+    public ArrayList<Student> getStudentsByName(String name) throws SQLException {
         ArrayList<Student> students = new ArrayList<>();
         ResultSet rs;
         try (PreparedStatement ps = connect.prepareStatement("SELECT StudentID FROM studb WHERE Name LIKE ?;")) {
