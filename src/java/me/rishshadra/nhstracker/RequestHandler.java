@@ -93,8 +93,24 @@ public class RequestHandler extends HttpServlet {
                             request.getRequestDispatcher("submit.jsp").forward(request, response);
                         }
                     }
-                } catch (SQLException | MessagingException | IOException | ServletException ex) { //On messagingexception, set message type to warning and tell user that email was unable to be sent.
+                } catch (SQLException | IOException | ServletException ex) { //On messagingexception, set message type to warning and tell user that email was unable to be sent.
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NumberFormatException ex) {
+                    request.setAttribute("error", "<strong>Error!</strong> PINs must be numeric.");
+                    request.setAttribute("error-type", "danger");
+                    try {
+                        request.getRequestDispatcher("submit.jsp").forward(request, response);
+                    } catch (ServletException | IOException ex1) {
+                        Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
+                } catch (MessagingException ex) {
+                    request.setAttribute("error", "<strong>Warning!</strong> Your hours were submitted, but a confirmation email could not be sent.");
+                    request.setAttribute("error-type", "warning");
+                    try {
+                        request.getRequestDispatcher("submit.jsp").forward(request, response);
+                    } catch (ServletException | IOException ex1) {
+                        Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
                 }
 
             } else {
