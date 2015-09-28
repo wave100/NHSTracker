@@ -176,6 +176,20 @@ public class Reader {
         return s;
     }
 
+    public ArrayList<Student> getStudentsByInductionYear(int year) throws SQLException {
+        ArrayList<Student> students = new ArrayList<>();
+        ResultSet rs;
+        try (PreparedStatement ps = connect.prepareStatement("SELECT StudentID FROM studb WHERE InductionYear = ?;")) {
+            ps.setInt(1, year);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                students.add(getStudentByID(rs.getInt("StudentID")));
+            }
+        }
+        rs.close();
+        return students;
+    }
+    
     public ArrayList<Student> getStudentsByName(String name) throws SQLException {
         ArrayList<Student> students = new ArrayList<>();
         ResultSet rs;
