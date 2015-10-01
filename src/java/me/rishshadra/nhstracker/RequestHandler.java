@@ -151,7 +151,7 @@ public class RequestHandler extends HttpServlet {
         Reader r = new Reader();
         GMailer email = new GMailer();
         Map<String, String[]> map = request.getParameterMap();
-        if (request.getParameterMap().size() == 4) {
+        if (request.getParameterMap().size() == 5 && map.containsKey("password") && map.get("password").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
             if (map.containsKey("name") && map.containsKey("graduationyear") && map.containsKey("email")) {
                 try {
                     r.addStudent(map.get("name")[0], Integer.parseInt(map.get("graduationyear")[0]), map.get(("email"))[0], Consts.CURRENT_INDUCTION_SECTION);
