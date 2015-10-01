@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context antiJARLocking="true" path="/NHSTracker">
-  <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxActive="100" maxIdle="30" maxWait="10000" name="jdbc/nhsdb" password="" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/nhsdb?autoReconnect=true" username="root" validationQuery="Select 1"/>
+  <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxActive="100" maxIdle="30" maxWait="15" name="jdbc/nhsdb" password="" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/nhsdb?autoReconnect=true" username="root" validationQuery="Select 1"/>
 </Context>
