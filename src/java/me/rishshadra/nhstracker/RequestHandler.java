@@ -232,7 +232,7 @@ public class RequestHandler extends HttpServlet {
 
     public void getHoursAdmin(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         try {
-            if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
+            if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH  || Integer.parseInt(request.getParameter("adminpass")) == Credentials.ADMIN_PASSWORD_HASH) {
                 me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful. Displaying page.");
 
                 Reader r = new Reader();
@@ -252,7 +252,7 @@ public class RequestHandler extends HttpServlet {
                             } else {
                                 checkboxFormat = "";
                             }
-                            out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity\"/><input type=\"hidden\" name=\"id\" value=\"" + a.getStudentID() + "\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                            out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity\"/><input type=\"hidden\" name=\"id\" value=\"" + a.getStudentID() + "\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"hidden\" name=\"adminpass\" value=\"" + Credentials.ADMIN_PASSWORD_HASH + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
                         }
                         out.println("</table>");
                         out.println("<h4>Total: " + s.getHours() + " hours.</h4>");
@@ -347,7 +347,7 @@ public class RequestHandler extends HttpServlet {
 
     public void toggleApproval(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
 
-        if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
+        if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH || Integer.parseInt(request.getParameter("adminpass")) == Credentials.ADMIN_PASSWORD_HASH) {
             me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful.");
             Reader r = new Reader();
             try {

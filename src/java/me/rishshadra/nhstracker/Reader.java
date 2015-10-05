@@ -193,11 +193,11 @@ public class Reader {
     public ArrayList<Student> getStudentsByName(String name) throws SQLException {
         ArrayList<Student> students = new ArrayList<>();
         ResultSet rs;
-        try (PreparedStatement ps = connect.prepareStatement("SELECT StudentID FROM studb WHERE Name LIKE ?;")) {
+        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM studb WHERE Name LIKE ?;")) {
             ps.setString(1, "%" + name + "%");
             rs = ps.executeQuery();
             while (rs.next()) {
-                students.add(getStudentByID(rs.getInt("StudentID")));
+                students.add(new Student(rs.getInt("StudentID"), rs.getString("Name"), rs.getInt("GraduationYear"), rs.getInt("PIN"), rs.getString("Email"), rs.getInt("InductionYear")));
             }
         }
         rs.close();
