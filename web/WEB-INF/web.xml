@@ -6,7 +6,7 @@
     </servlet>
     <servlet>
         <servlet-name>DatabaseStatus</servlet-name>
-        <servlet-class>me.rishshadra.nhstracker.DatabaseStatus</servlet-class>
+        <servlet-class>me.rishshadra.nhstracker.utils.DatabaseStatus</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>RequestHandler</servlet-name>

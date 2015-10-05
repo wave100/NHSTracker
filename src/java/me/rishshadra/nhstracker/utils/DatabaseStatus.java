@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.rishshadra.nhstracker;
+package me.rishshadra.nhstracker.utils;
 
 import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import java.io.IOException;
@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import me.rishshadra.nhstracker.Database;
 
 /**
  *
