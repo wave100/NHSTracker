@@ -37,7 +37,7 @@ public class Student {
     }
 
     public int generateNewPIN() {
-        setPin(new Reader().generatePIN());
+        setPin(new Reader().generatePIN()); //Why is GeneratePIN() a method of reader?!?
         return pin;
     }
 

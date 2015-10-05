@@ -213,6 +213,9 @@ public class RequestHandler extends HttpServlet {
                         } else {
                             out.println("Incorrect PIN entered.");
                         }
+
+                        me.rishshadra.nhstracker.logging.Logger.logText("Got Hours For: " + s.getName());
+
                     } catch (SQLException ex) {
                         Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (NumberFormatException ex) {
@@ -232,7 +235,7 @@ public class RequestHandler extends HttpServlet {
 
     public void getHoursAdmin(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         try {
-            if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH  || Integer.parseInt(request.getParameter("adminpass")) == Credentials.ADMIN_PASSWORD_HASH) {
+            if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH || Integer.parseInt(request.getParameter("adminpass")) == Credentials.ADMIN_PASSWORD_HASH) {
                 me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful. Displaying page.");
 
                 Reader r = new Reader();
