@@ -5,6 +5,7 @@
  */
 package me.rishshadra.nhstracker;
 
+import me.rishshadra.nhstracker.sql.Reader;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import org.junit.After;

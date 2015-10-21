@@ -5,6 +5,7 @@
  */
 package me.rishshadra.nhstracker;
 
+import me.rishshadra.nhstracker.sql.Reader;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;

@@ -1,4 +1,4 @@
-package me.rishshadra.nhstracker;
+package me.rishshadra.nhstracker.sql;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.rishshadra.nhstracker.Activity;
+import me.rishshadra.nhstracker.Student;
 import me.rishshadra.nhstracker.consts.Consts;
 
 /**

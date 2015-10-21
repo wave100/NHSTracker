@@ -10,7 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.mail.MessagingException;
 import me.rishshadra.gmailer.GMailer;
-import me.rishshadra.nhstracker.Reader;
+import me.rishshadra.nhstracker.sql.Reader;
 import me.rishshadra.nhstracker.Student;
 import me.rishshadra.nhstracker.consts.Consts;
 

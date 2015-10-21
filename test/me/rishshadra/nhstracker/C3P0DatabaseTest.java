@@ -5,6 +5,7 @@
  */
 package me.rishshadra.nhstracker;
 
+import me.rishshadra.nhstracker.sql.C3P0Database;
 import java.sql.Connection;
 import org.junit.After;
 import org.junit.AfterClass;
