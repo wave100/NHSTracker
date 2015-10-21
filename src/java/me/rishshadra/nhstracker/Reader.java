@@ -27,16 +27,13 @@ import me.rishshadra.nhstracker.consts.Consts;
 public class Reader {
 
     private Connection connect;
-    private Database db;
 
     public Reader() {
-
-        db = new Database();
 
         //System.out.println("Init Reader");
         try {
             //System.out.println("Getting Conn");
-            connect = db.getConnection();
+            connect = C3P0Database.getConnection();
             //System.out.println("Gotten Conn");
         } catch (SQLException ex) {
             Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
@@ -189,7 +186,7 @@ public class Reader {
         rs.close();
         return students;
     }
-    
+
     public ArrayList<Student> getStudentsByName(String name) throws SQLException {
         ArrayList<Student> students = new ArrayList<>();
         ResultSet rs;
@@ -285,7 +282,7 @@ public class Reader {
 
     private void reconnect() {
         try {
-            connect = db.getConnection();
+            connect = C3P0Database.getConnection();
         } catch (SQLException ex) {
             Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
             //    reconnect();

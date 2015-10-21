@@ -47,7 +47,7 @@ public class Database {
         }
     }
 
-    public Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         //System.out.println("Returning Connection");
         if (localConnection) {
             return connectToLocalDB();
