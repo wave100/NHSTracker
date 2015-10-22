@@ -208,7 +208,7 @@ public class RequestHandler extends HttpServlet {
             } else {
                 ArrayList<Student> sl = new ArrayList<>();
                 sl.add(s);
-                String msg = "Dear $NAME, <br /> <br />Your PIN for the hour tracker is $PIN.";
+                String msg = "Dear $NAME, <br /> <br />Your PIN for the hour tracker is $PIN. <br />";
                 m = new Mailer(msg, "Your Hour Tracker PIN", sl);
                 m.sendMessages();
             }

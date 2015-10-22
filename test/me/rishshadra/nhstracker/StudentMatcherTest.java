@@ -40,44 +40,44 @@ public class StudentMatcherTest {
     /**
      * Test of matchByFirstName method, of class StudentMatcher.
      */
-    @Test
-    public void testMatchByFirstName() throws Exception {
-        System.out.println("matchByFirstName");
-        String fname = "";
-        int expResult = 0;
-        int result = StudentMatcher.matchByFirstName(fname);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of matchByLastName method, of class StudentMatcher.
-     */
-    @Test
-    public void testMatchByLastName() throws Exception {
-        System.out.println("matchByLastName");
-        String lname = "";
-        int expResult = 0;
-        int result = StudentMatcher.matchByLastName(lname);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of matchByFullName method, of class StudentMatcher.
-     */
-    @Test
-    public void testMatchByFullName() throws Exception {
-        System.out.println("matchByFullName");
-        String fullname = "";
-        int expResult = 0;
-        int result = StudentMatcher.matchByFullName(fullname);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testMatchByFirstName() throws Exception {
+//        System.out.println("matchByFirstName");
+//        String fname = "";
+//        int expResult = 0;
+//        int result = StudentMatcher.matchByFirstName(fname);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of matchByLastName method, of class StudentMatcher.
+//     */
+//    @Test
+//    public void testMatchByLastName() throws Exception {
+//        System.out.println("matchByLastName");
+//        String lname = "";
+//        int expResult = 0;
+//        int result = StudentMatcher.matchByLastName(lname);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of matchByFullName method, of class StudentMatcher.
+//     */
+//    @Test
+//    public void testMatchByFullName() throws Exception {
+//        System.out.println("matchByFullName");
+//        String fullname = "";
+//        int expResult = 0;
+//        int result = StudentMatcher.matchByFullName(fullname);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of getLastName method, of class StudentMatcher.
