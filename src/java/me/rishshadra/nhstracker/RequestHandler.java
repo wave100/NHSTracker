@@ -178,9 +178,9 @@ public class RequestHandler extends HttpServlet {
     public void emailPIN(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
         Mailer m;
-        try {
+        Student s = null;
 
-            Student s;
+        try {
 
             if (request.getParameter("input").contains("@")) {
                 s = r.getStudentByEmail(request.getParameter("input"));
@@ -196,17 +196,29 @@ public class RequestHandler extends HttpServlet {
             if (s.isEmpty()) {
                 me.rishshadra.nhstracker.logging.Logger.logText(s.getError());
                 out.println(s.getError());
+
+                request.setAttribute("error", "<strong>Error!</strong> No student found with name/email " + request.getParameter("input"));
+                request.setAttribute("error-type", "danger");
+                try {
+                    request.getRequestDispatcher("ForgotPIN.jsp").forward(request, response);
+                } catch (ServletException ex) {
+                    Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
             } else {
                 ArrayList<Student> sl = new ArrayList<>();
                 sl.add(s);
-                String msg = "Dear $NAME, <br /> <br />Your PIN is $PIN.";
-                m = new Mailer(msg, "Your NHSTracker PIN", sl);
+                String msg = "Dear $NAME, <br /> <br />Your PIN for the hour tracker is $PIN.";
+                m = new Mailer(msg, "Your Hour Tracker PIN", sl);
                 m.sendMessages();
             }
             r.close();
         } catch (SQLException | MessagingException | IOException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+
+        request.setAttribute("error", "<strong>Success!</strong> Your PIN was emailed to you at " + s.getEmail());
+        request.setAttribute("error-type", "success");
 
         try {
             request.getRequestDispatcher("index.jsp").forward(request, response);
