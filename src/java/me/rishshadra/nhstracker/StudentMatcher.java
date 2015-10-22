@@ -77,6 +77,9 @@ public class StudentMatcher {
                 }
             }
         }
+        
+        r.close();
+        
         return -1;
     }
 }
