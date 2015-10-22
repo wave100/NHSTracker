@@ -16,11 +16,11 @@ import javax.servlet.http.HttpServletResponse;
 public class ErrorHandler {
 
     public static void processError(String destination, String level, String description) {
-
+        Logger.logText("[" + level + "] " + description + "(occurred while trying to access " + destination + ")");
     }
 
     public static void processError(String destination, String level, String description, PrintWriter out) {
-
+        Logger.logText("");
     }
 
     public static void processError(String destination, String level, String description, PrintWriter out, HttpServletRequest request, HttpServletResponse response) {

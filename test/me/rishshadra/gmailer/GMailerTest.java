@@ -5,6 +5,7 @@
  */
 package me.rishshadra.gmailer;
 
+import me.rishshadra.nhstracker.gmailer.GmailInterface;
 import com.google.api.services.gmail.model.Message;
 import java.util.List;
 import org.junit.After;
@@ -45,7 +46,7 @@ public class GMailerTest {
     @Test
     public void testCheckAuth() {
         System.out.println("checkAuth");
-        GMailer instance = new GMailer();
+        GmailInterface instance = new GmailInterface();
         instance.checkAuth();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -60,7 +61,7 @@ public class GMailerTest {
         String to = "";
         String subject = "";
         String content = "";
-        GMailer instance = new GMailer();
+        GmailInterface instance = new GmailInterface();
         instance.sendMessage(to, subject, content);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -72,7 +73,7 @@ public class GMailerTest {
     @Test
     public void testGetMessages() throws Exception {
         System.out.println("getMessages");
-        GMailer instance = new GMailer();
+        GmailInterface instance = new GmailInterface();
         List<Message> expResult = null;
         List<Message> result = instance.getMessages();
         assertEquals(expResult, result);
@@ -87,7 +88,7 @@ public class GMailerTest {
     public void testGetMessage() throws Exception {
         System.out.println("getMessage");
         String id = "";
-        GMailer instance = new GMailer();
+        GmailInterface instance = new GmailInterface();
         Message expResult = null;
         Message result = instance.getMessage(id);
         assertEquals(expResult, result);
@@ -102,7 +103,7 @@ public class GMailerTest {
     public void testMarkMessageRead() throws Exception {
         System.out.println("markMessageRead");
         String id = "";
-        GMailer instance = new GMailer();
+        GmailInterface instance = new GmailInterface();
         instance.markMessageRead(id);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
@@ -115,7 +116,7 @@ public class GMailerTest {
     public void testArchiveMessage() throws Exception {
         System.out.println("archiveMessage");
         String id = "";
-        GMailer instance = new GMailer();
+        GmailInterface instance = new GmailInterface();
         instance.archiveMessage(id);
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");

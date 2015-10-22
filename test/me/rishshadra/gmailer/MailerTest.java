@@ -5,6 +5,7 @@
  */
 package me.rishshadra.gmailer;
 
+import me.rishshadra.nhstracker.gmailer.Mailer;
 import me.rishshadra.nhstracker.Student;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -17,9 +18,9 @@ import static org.junit.Assert.*;
  *
  * @author Rish
  */
-public class GroupMailerTest {
+public class MailerTest {
     
-    public GroupMailerTest() {
+    public MailerTest() {
     }
     
     @BeforeClass
@@ -46,20 +47,8 @@ public class GroupMailerTest {
         System.out.println("prepareMessage");
         Student s = null;
         String link = "";
-        GroupMailer instance = null;
+        Mailer instance = null;
         instance.prepareMessage(s, link);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of printPreparedMessage method, of class GroupMailer.
-     */
-    @Test
-    public void testPrintPreparedMessage() {
-        System.out.println("printPreparedMessage");
-        GroupMailer instance = null;
-        instance.printPreparedMessage();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }
@@ -70,7 +59,7 @@ public class GroupMailerTest {
     @Test
     public void testGetPreparedMessage() {
         System.out.println("getPreparedMessage");
-        GroupMailer instance = null;
+        Mailer instance = null;
         String expResult = "";
         String result = instance.getPreparedMessage();
         assertEquals(expResult, result);
@@ -84,8 +73,8 @@ public class GroupMailerTest {
     @Test
     public void testSendPreparedMessage() throws Exception {
         System.out.println("sendPreparedMessage");
-        GroupMailer instance = null;
-        instance.sendPreparedMessage();
+        Mailer instance = null;
+        instance.sendMessages();
         // TODO review the generated test code and remove the default call to fail.
         fail("The test case is a prototype.");
     }

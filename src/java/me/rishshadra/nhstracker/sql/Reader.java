@@ -155,10 +155,32 @@ public class Reader {
         return activities;
     }
 
+    public Student getStudentByEmail(String email) throws SQLException {
+        ResultSet rs;
+        Student s;
+        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM studb WHERE Email = ?;")) {
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            if (getResultSetLength(rs) == 0) {
+                System.out.println("No student found with email " + email);
+                s = new Student(true, "No student found with email " + email);
+            } else if (getResultSetLength(rs) == 1) {
+                rs.next();
+                s = new Student(rs.getInt("StudentID"), rs.getString("Name"), rs.getInt("GraduationYear"), rs.getInt("PIN"), rs.getString("Email"), rs.getInt("InductionYear"));
+            } else {
+                System.out.println("Multiple matches found with email " + email);
+                s = new Student(true, "Multiple matches found with email " + email);
+            }
+        }
+        rs.close();
+        return s;
+    }
+    
     public Student getStudentByID(int id) throws SQLException {
         ResultSet rs;
         Student s;
-        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM studb WHERE StudentID = " + id + ";")) {
+        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM studb WHERE StudentID = ?;")) {
+            ps.setInt(1, id);
             rs = ps.executeQuery();
             if (getResultSetLength(rs) == 0) {
                 System.out.println("No student found with ID " + id);
@@ -294,7 +316,7 @@ public class Reader {
 }
 
 //TODO:
-//  Email addresses in the student DB
+//
 //
 //IDEAS:
 //  Leaderboard based on volunteer hours?

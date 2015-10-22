@@ -19,9 +19,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import me.rishshadra.gmailer.GMailer;
+import me.rishshadra.nhstracker.gmailer.GmailInterface;
 import me.rishshadra.nhstracker.consts.Consts;
 import me.rishshadra.nhstracker.consts.Credentials;
+import me.rishshadra.nhstracker.gmailer.Mailer;
 
 /**
  *
@@ -32,7 +33,7 @@ public class RequestHandler extends HttpServlet {
     //Reader r;
     public void addActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
-        GMailer mail = new GMailer();
+        GmailInterface mail = new GmailInterface();
         if (request.getParameterMap().size() == 8 || request.getParameterMap().size() == 7) {
             int id = -1;
             try {
@@ -150,7 +151,7 @@ public class RequestHandler extends HttpServlet {
 
     public void addStudent(PrintWriter out, HttpServletRequest request) {
         Reader r = new Reader();
-        GMailer email = new GMailer();
+        //GMailer email = new GMailer();
         Map<String, String[]> map = request.getParameterMap();
         if (request.getParameterMap().size() == 5 && map.containsKey("password") && map.get("password").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
             if (map.containsKey("name") && map.containsKey("graduationyear") && map.containsKey("email")) {
@@ -172,6 +173,47 @@ public class RequestHandler extends HttpServlet {
         } catch (SQLException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    public void emailPIN(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        Reader r = new Reader();
+        Mailer m;
+        try {
+
+            Student s;
+
+            if (request.getParameter("input").contains("@")) {
+                s = r.getStudentByEmail(request.getParameter("input"));
+            } else {
+                ArrayList<Student> st = r.getStudentsByName(request.getParameter("input"));
+                if (st.size() != 1) {
+                    s = new Student(true, "Student with requested name or email not found.");
+                } else {
+                    s = st.get(0);
+                }
+            }
+
+            if (s.isEmpty()) {
+                me.rishshadra.nhstracker.logging.Logger.logText(s.getError());
+                out.println(s.getError());
+            } else {
+                ArrayList<Student> sl = new ArrayList<>();
+                sl.add(s);
+                String msg = "Dear $NAME, <br /> <br />Your PIN is $PIN.";
+                m = new Mailer(msg, "Your NHSTracker PIN", sl);
+                m.sendMessages();
+            }
+            r.close();
+        } catch (SQLException | MessagingException | IOException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        try {
+            request.getRequestDispatcher("index.jsp").forward(request, response);
+        } catch (ServletException | IOException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
 
     public void getHours(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
@@ -475,6 +517,9 @@ public class RequestHandler extends HttpServlet {
                 } else if (request.getParameter("action").equalsIgnoreCase("approveactivity")) {
                     me.rishshadra.nhstracker.logging.Logger.logText("Approving Activity");
                     toggleApproval(out, request, response);
+                } else if (request.getParameter("action").equalsIgnoreCase("emailpin")) {
+                    me.rishshadra.nhstracker.logging.Logger.logText("Emailing PIN");
+                    emailPIN(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("blank")) {
                     me.rishshadra.nhstracker.logging.Logger.logText("Generating Blank Page");
                     out.println("");

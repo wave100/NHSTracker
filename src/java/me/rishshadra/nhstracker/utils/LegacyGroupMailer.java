@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.mail.MessagingException;
-import me.rishshadra.gmailer.GMailer;
+import me.rishshadra.nhstracker.gmailer.GmailInterface;
 import me.rishshadra.nhstracker.sql.Reader;
 import me.rishshadra.nhstracker.Student;
 import me.rishshadra.nhstracker.consts.Consts;
@@ -21,7 +21,7 @@ import me.rishshadra.nhstracker.consts.Consts;
 public class LegacyGroupMailer {
 
     public static void main(String[] args) throws SQLException, MessagingException, IOException {
-        GMailer mail = new GMailer();
+        GmailInterface mail = new GmailInterface();
         Reader r = new Reader();
 
         ArrayList<Student> students = r.getStudentsByName("");
