@@ -244,23 +244,8 @@ public class RequestHandler extends HttpServlet {
                         Student s = r.getStudentsByName(request.getParameter("studentname")).get(0);
                         if (Integer.parseInt(request.getParameter("pin")) == s.getPIN()) {
                             if (!s.isEmpty()) {
-                                DecimalFormat df = new DecimalFormat("###.##");
-                                String checkboxFormat;
-                                out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
-                                out.println("<style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
-                                out.println("<table class=\"table table-striped\">");
-                                out.println("<thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
-                                for (Activity a : (ArrayList<Activity>) s.getActivities()) {
-                                    if (a.isApproved()) {
-                                        checkboxFormat = "checked=\"checked\"";
-                                    } else {
-                                        checkboxFormat = "";
-                                    }
-                                    out.println("<tr> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<input type=\"checkbox\" disabled=\"disabled\" " + checkboxFormat + " />" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
-                                }
-                                out.println("</table>");
-
-                                out.println("<h4>Total: " + s.getHours() + " hours. (" + s.getApprovedHours() + " approved) </h4>");
+                                request.setAttribute("student", s);
+                                request.getRequestDispatcher("listActivities.jsp").forward(request, response);
 
                             } else {
                                 out.println(s.getError());
@@ -271,7 +256,7 @@ public class RequestHandler extends HttpServlet {
 
                         me.rishshadra.nhstracker.logging.Logger.logText("Got Hours For: " + s.getName());
 
-                    } catch (SQLException ex) {
+                    } catch (SQLException | ServletException | IOException ex) {
                         Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
                     } catch (NumberFormatException ex) {
                         out.println("Incorrect PIN entered.");
