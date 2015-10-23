@@ -178,18 +178,18 @@ public class RequestHandler extends HttpServlet {
     public void emailPIN(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
         Mailer m;
-        Student s = null;
+        Student s = new Student(true, "If you are reading this, emailPIN() goofed.");
 
         try {
 
             if (request.getParameter("input").contains("@")) {
                 s = r.getStudentByEmail(request.getParameter("input"));
             } else {
-                ArrayList<Student> st = r.getStudentsByName(request.getParameter("input"));
-                if (st.size() != 1) {
+                int id = StudentMatcher.attemptMatch(request.getParameter("input"));
+                if (id < 0) {
                     s = new Student(true, "Student with requested name or email not found.");
                 } else {
-                    s = st.get(0);
+                    s = r.getStudentByID(id);
                 }
             }
 
