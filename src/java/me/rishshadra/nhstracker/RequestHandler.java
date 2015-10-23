@@ -153,7 +153,7 @@ public class RequestHandler extends HttpServlet {
         Reader r = new Reader();
         //GMailer email = new GMailer();
         Map<String, String[]> map = request.getParameterMap();
-        if (request.getParameterMap().size() == 5 && map.containsKey("password") && map.get("password").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
+        if (request.getParameterMap().size() == 5 && map.containsKey("password") && map.get("password")[0].hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
             if (map.containsKey("name") && map.containsKey("graduationyear") && map.containsKey("email")) {
                 try {
                     r.addStudent(map.get("name")[0], Integer.parseInt(map.get("graduationyear")[0]), map.get(("email"))[0], Consts.CURRENT_INDUCTION_SECTION);
@@ -208,7 +208,7 @@ public class RequestHandler extends HttpServlet {
             } else {
                 ArrayList<Student> sl = new ArrayList<>();
                 sl.add(s);
-                String msg = "Dear $NAME, <br /> <br />Your PIN for the hour tracker is $PIN. <br />";
+                String msg = "Dear $NAME, <br /> <br />Your PIN for the hour tracker is $PIN. <br /> <br />";
                 m = new Mailer(msg, "Your Hour Tracker PIN", sl);
                 m.sendMessages();
             }
@@ -233,6 +233,7 @@ public class RequestHandler extends HttpServlet {
         if (request.getParameterMap().containsKey("id")) {
             try {
                 request.setAttribute("name", r.getStudentByID(Integer.parseInt(request.getParameter("id"))).getName());
+                r.close();
                 request.getRequestDispatcher("index.jsp").forward(request, response);
             } catch (ServletException | IOException | SQLException ex) {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);

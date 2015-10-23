@@ -9,6 +9,11 @@ package me.rishshadra.nhstracker.tokens;
  *
  * @author Rish
  */
+import java.util.UUID;
+
 public class TokenGenerator {
-    
+
+    public static String generateUUID() {
+        return UUID.randomUUID().toString();
+    }
 }
