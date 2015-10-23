@@ -239,9 +239,10 @@ public class RequestHandler extends HttpServlet {
             }
         } else {
             try {
-                if (r.getStudentsByName(request.getParameter("studentname")).size() == 1) {
+                int id = StudentMatcher.attemptMatch(request.getParameter("studentname"));
+                if (id > 0) {
                     try {
-                        Student s = r.getStudentsByName(request.getParameter("studentname")).get(0);
+                        Student s = r.getStudentByID(id);
                         if (Integer.parseInt(request.getParameter("pin")) == s.getPIN()) {
                             if (!s.isEmpty()) {
                                 request.setAttribute("student", s);
