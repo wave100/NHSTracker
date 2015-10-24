@@ -40,7 +40,7 @@ public class StudentMatcher {
         }
     }
 
-    public static String getLastName(String s) {
+    private static String getLastName(String s) {
         if (s.contains(" ")) {
             return s.substring(s.indexOf(" ") + 1, s.length());
         } else {
@@ -48,7 +48,7 @@ public class StudentMatcher {
         }
     }
 
-    public static String getFirstName(String s) {
+    private static String getFirstName(String s) {
         if (s.contains(" ")) {
             return s.substring(0, s.indexOf(" "));
         } else {

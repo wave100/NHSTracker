@@ -82,30 +82,30 @@ public class StudentMatcherTest {
     /**
      * Test of getLastName method, of class StudentMatcher.
      */
-    @Test
-    public void testGetLastName() {
-        System.out.println("getLastName");
-        String s = "";
-        String expResult = "";
-        String result = StudentMatcher.getLastName(s);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of getFirstName method, of class StudentMatcher.
-     */
-    @Test
-    public void testGetFirstName() {
-        System.out.println("getFirstName");
-        String s = "";
-        String expResult = "";
-        String result = StudentMatcher.getFirstName(s);
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testGetLastName() {
+//        System.out.println("getLastName");
+//        String s = "";
+//        String expResult = "";
+//        String result = StudentMatcher.getLastName(s);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of getFirstName method, of class StudentMatcher.
+//     */
+//    @Test
+//    public void testGetFirstName() {
+//        System.out.println("getFirstName");
+//        String s = "";
+//        String expResult = "";
+//        String result = StudentMatcher.getFirstName(s);
+//        assertEquals(expResult, result);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of truncateMiddleName method, of class StudentMatcher.
