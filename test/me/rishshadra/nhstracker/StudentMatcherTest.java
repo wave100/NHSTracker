@@ -5,6 +5,7 @@
  */
 package me.rishshadra.nhstracker;
 
+import me.rishshadra.nhstracker.matchers.StudentMatcher;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

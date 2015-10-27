@@ -67,6 +67,7 @@ and open the template in the editor.
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="index.jsp">View</a></li>
                         <li><a href="submit.jsp">Submit</a></li>
+                        <li><a href="about.jsp">About</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -87,6 +88,9 @@ and open the template in the editor.
                 <a href="ForgotPIN.jsp">Forgot your PIN?</a></form>
 
             <iframe id="resultFrame" src="RequestHandler?action=blank" seamless="seamless" scrolling="no"></iframe>
+
+            <div id="creditholder"><h6 id="credittext">Designed by Rish Shadra. Hosted by Evan Goldstein.</h6></div>
+
         </div> <!-- /container -->
 
         <!-- Bootstrap core JavaScript

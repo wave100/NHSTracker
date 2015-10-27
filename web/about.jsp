@@ -1,14 +1,14 @@
 <%-- 
-    Document   : ForgotPIN
-    Created on : Oct 22, 2015, 10:57:08 AM
-    Author     : Rish Shadra <rshadra@gmail.com>
+    Document   : about
+    Created on : Oct 26, 2015, 7:34:00 PM
+    Author     : Rish
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+
 <html>
     <head>
-        <title>Forgot PIN</title>
+        <title>About</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,7 +28,10 @@
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->  
+        <![endif]-->
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type='text/javascript' src="js/hover.js"></script>
 
     </head>
     <body role="document">
@@ -47,22 +50,33 @@
                     <ul class="nav navbar-nav">
                         <li><a href="index.jsp">View</a></li>
                         <li><a href="submit.jsp">Submit</a></li>
+                        <li class="active"><a href="about.jsp">About</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
 
-        <div class="container theme-showcase" role="main" id="maindiv">
-
+        <div class="container theme-showcase" role="main">
             <% if (request.getAttribute("error") == null) {%>
             <frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> I am currently testing out a new database connection system. This new method may be unstable. If something breaks, let me know at rshadra@gmail.com.</div></frame>
                 <%} else {%>
             <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
                 <%}%>
 
-            <form action="RequestHandler" method="POST">
-                <input type="hidden" name="action" value="emailpin"> <input id="studentName" type="text" name="input" placeholder="Name or Email" required/> <input type="submit" value="Send PIN" />
+            <form method="POST" action="RequestHandler" id="activityform">
+                <input type="hidden" name="action" value="addactivity" />
+                <input type="text" name="name" placeholder="Your Name" required /> <input type="password" name="pin" placeholder="PIN" style="width: 80px;" maxlength="4" required /> <br />
+                <input type="text" name="obsname" placeholder="Observer Name" required /> <br />
+                <input type="text" name="obsemail" placeholder="Observer Email" required /> <br />
+                <input type="number" step="any" min="0" name="hours" placeholder="Hours Completed" required /> <br /> <br />
+                <!--<input type="text" name="description" placeholder="Description" style="width: 254px; height: 100px;" required /> <br /> <br />-->
+                <textarea name="description" placeholder="Description" style="resize: none; width: 254px; height: 100px;" required></textarea>
+                <div id="groupdiv">Was this project a group project? &nbsp;&nbsp; <input type="checkbox" name="groupproj" id="group" /> <br /> <br />
+
+                    <input type="submit" /> &nbsp;&nbsp; By submitting this form, I swear that all of the information in this form is truthful.</div>
             </form>
+
+            <div id="creditholder"><h6 id="credittext">@</h6></div>
 
         </div> <!-- /container -->
 
@@ -75,4 +89,3 @@
         <script src="assets/js/ie10-viewport-bug-workaround.js"></script>
     </body>
 </html>
-

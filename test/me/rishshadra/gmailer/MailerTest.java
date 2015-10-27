@@ -6,7 +6,7 @@
 package me.rishshadra.gmailer;
 
 import me.rishshadra.nhstracker.gmailer.Mailer;
-import me.rishshadra.nhstracker.Student;
+import me.rishshadra.nhstracker.models.Student;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

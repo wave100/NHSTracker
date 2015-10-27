@@ -28,6 +28,9 @@ and open the template in the editor.
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
 
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type='text/javascript' src="js/hover.js"></script>
+
     </head>
     <body role="document">
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -45,6 +48,7 @@ and open the template in the editor.
                     <ul class="nav navbar-nav">
                         <li><a href="index.jsp">View</a></li>
                         <li class="active"><a href="submit.jsp">Submit</a></li>
+                        <li><a href="about.jsp">About</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -69,6 +73,9 @@ and open the template in the editor.
 
                     <input type="submit" /> &nbsp;&nbsp; By submitting this form, I swear that all of the information in this form is truthful.</div>
             </form>
+
+            <div id="creditholder"><h6 id="credittext">@</h6></div>
+
         </div> <!-- /container -->
 
         <!-- Bootstrap core JavaScript

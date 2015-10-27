@@ -5,6 +5,8 @@
  */
 package me.rishshadra.nhstracker;
 
+import me.rishshadra.nhstracker.models.Student;
+import me.rishshadra.nhstracker.models.Activity;
 import me.rishshadra.nhstracker.sql.Reader;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -286,14 +288,14 @@ public class ReaderTest {
     /**
      * Test of testConnection method, of class Reader.
      */
-    @Test
-    public void testTestConnection() throws Exception {
-        System.out.println("testConnection");
-        Reader instance = new Reader();
-        instance.testConnection();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
+//    @Test
+//    public void testTestConnection() throws Exception {
+//        System.out.println("testConnection");
+//        Reader instance = new Reader();
+//        instance.testConnection();
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
 
     /**
      * Test of toggleApproval method, of class Reader.

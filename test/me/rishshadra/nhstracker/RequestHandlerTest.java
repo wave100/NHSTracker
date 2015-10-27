@@ -5,6 +5,7 @@
  */
 package me.rishshadra.nhstracker;
 
+import me.rishshadra.nhstracker.handlers.RequestHandler;
 import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -215,46 +216,46 @@ public class RequestHandlerTest {
         fail("The test case is a prototype.");
     }
 
-    /**
-     * Test of doGet method, of class RequestHandler.
-     */
-    @Test
-    public void testDoGet() throws Exception {
-        System.out.println("doGet");
-        HttpServletRequest request = null;
-        HttpServletResponse response = null;
-        RequestHandler instance = new RequestHandler();
-        instance.doGet(request, response);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of doPost method, of class RequestHandler.
-     */
-    @Test
-    public void testDoPost() throws Exception {
-        System.out.println("doPost");
-        HttpServletRequest request = null;
-        HttpServletResponse response = null;
-        RequestHandler instance = new RequestHandler();
-        instance.doPost(request, response);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-
-    /**
-     * Test of processRequest method, of class RequestHandler.
-     */
-    @Test
-    public void testProcessRequest() throws Exception {
-        System.out.println("processRequest");
-        HttpServletRequest request = null;
-        HttpServletResponse response = null;
-        RequestHandler instance = new RequestHandler();
-        instance.processRequest(request, response);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
-    }
-    
+//    /**
+//     * Test of doGet method, of class RequestHandler.
+//     */
+//    @Test
+//    public void testDoGet() throws Exception {
+//        System.out.println("doGet");
+//        HttpServletRequest request = null;
+//        HttpServletResponse response = null;
+//        RequestHandler instance = new RequestHandler();
+//        instance.doGet(request, response);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of doPost method, of class RequestHandler.
+//     */
+//    @Test
+//    public void testDoPost() throws Exception {
+//        System.out.println("doPost");
+//        HttpServletRequest request = null;
+//        HttpServletResponse response = null;
+//        RequestHandler instance = new RequestHandler();
+//        instance.doPost(request, response);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//
+//    /**
+//     * Test of processRequest method, of class RequestHandler.
+//     */
+//    @Test
+//    public void testProcessRequest() throws Exception {
+//        System.out.println("processRequest");
+//        HttpServletRequest request = null;
+//        HttpServletResponse response = null;
+//        RequestHandler instance = new RequestHandler();
+//        instance.processRequest(request, response);
+//        // TODO review the generated test code and remove the default call to fail.
+//        fail("The test case is a prototype.");
+//    }
+//    
 }
