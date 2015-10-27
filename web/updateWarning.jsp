@@ -4,6 +4,8 @@
     Author     : Rish
 --%>
 
+<%@page import="me.rishshadra.nhstracker.warnings.Warning"%>
+<%@page import="me.rishshadra.nhstracker.sql.Reader"%>
 <!DOCTYPE html>
 
 <html>
@@ -58,23 +60,29 @@
 
         <div class="container theme-showcase" role="main" id="maindiv">
 
-            <% if (request.getAttribute("error") == null) {%>
-            <!--<frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>-->
-            <%} else {%>
+            <% if (request.getAttribute("error") == null) {
+                    Reader r = new Reader();
+                    out.println(r.getWarning().getHTML());
+                    r.close();
+                } else {%>
             <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
                 <%}%>
-
+                <% Reader r = new Reader();
+                    Warning w = r.getWarning();%>
             <form method="POST" action="RequestHandler">
                 <input type="hidden" name="action" value="updatewarning" />
-                <input id="adminpass" type="password" name="adminpass" placeholder="Admin Password" /> <br />
-                <input id="content" type="text" name="content" placeholder="Warning Text" /> <input type="checkbox" name="enabled" /><br />
+                <input id="content" type="text" name="content" placeholder="Warning Text" value="<%out.println(w.getContent());%>"/> <br /> <br /> Enabled: <input type="checkbox" name="enabled" <%if (w.isEnabled()) {
+                        out.println("checked");
+                    }%>/><br />
                 Type: <select name="type">
                     <option value="0">Success</option>
                     <option value="1">Info</option>
                     <option value="2">Warning</option>
                     <option value="3">Danger</option>
-                </select><br />
+                </select> <br /> <br />
+                <input id="adminpass" type="password" name="adminpass" placeholder="Admin Password"/> 
                 <input type="submit" placeholder="Submit" required /> <br />
+                <%r.close();%>
             </form>
 
             <div id="creditholder"><h6 id="credittext">@</h6></div>

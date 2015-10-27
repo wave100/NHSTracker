@@ -28,4 +28,16 @@ public class Warning {
             return "";
         }
     }
+    
+    public int getType() {
+        return type;
+    }
+    
+    public String getContent() {
+        return content;
+    }
+    
+    public boolean isEnabled() {
+        return enabled;
+    }
 }
