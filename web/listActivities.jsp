@@ -6,9 +6,9 @@
 
 <%@page import="me.rishshadra.nhstracker.sql.Reader"%>
 <%@page import="java.text.DecimalFormat"%>
-<%@page import="me.rishshadra.nhstracker.Activity"%>
+<%@page import="me.rishshadra.nhstracker.models.Activity"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="me.rishshadra.nhstracker.Student"%>
+<%@page import="me.rishshadra.nhstracker.models.Student"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%Student s = (Student) request.getAttribute("student");%>

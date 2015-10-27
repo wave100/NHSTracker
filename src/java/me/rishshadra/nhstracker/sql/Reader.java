@@ -132,6 +132,14 @@ public class Reader {
 
         }
     }
+    
+    public float getHourSum() throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("SELECT SUM(HOURS) AS HourSum FROM hrdb;")) {
+            ResultSet rs = ps.executeQuery();
+            rs.last();
+            return rs.getFloat("HourSum");
+        }
+    }
 
     public int getResultSetLength(ResultSet rs) throws SQLException {
         rs.last();

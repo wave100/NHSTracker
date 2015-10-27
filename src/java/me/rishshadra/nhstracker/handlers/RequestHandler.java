@@ -428,7 +428,7 @@ public class RequestHandler extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
-                updateWarning(out, request, response);
+                updateWarning(out, request, response); //Is this necessary?
             try {
                 r.close();
             } catch (SQLException ex) {
