@@ -22,6 +22,7 @@ import me.rishshadra.nhstracker.models.Activity;
 import me.rishshadra.nhstracker.models.Student;
 import me.rishshadra.nhstracker.warnings.Warning;
 import me.rishshadra.nhstracker.consts.Consts;
+import me.rishshadra.nhstracker.warnings.WarningTypes;
 
 /**
  *
@@ -228,12 +229,14 @@ public class Reader {
 
     public Warning getWarning() throws SQLException {
         ResultSet rs;
+        Warning w = null;
         try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM warndb;")) {
             rs = ps.executeQuery();
             rs.last();
+            w = new Warning(rs.getInt("type"), rs.getString("content"), rs.getBoolean("enabled"));
         }
         rs.close();
-        return new Warning(rs.getInt("type"), rs.getString("content"));
+        return w;
     }
 
     public void groupParticipantSignOut(String fname, String lname) throws SQLException {
@@ -285,7 +288,12 @@ public class Reader {
     public void toggleApproval(int id) throws SQLException {
         try (PreparedStatement ps = connect.prepareStatement("UPDATE hrdb SET approved = !approved WHERE activityID=?;")) {
             ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
 
+    public void toggleWarning() throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("UPDATE warndb SET enabled = !enabled WHERE 1=1;")) {
             ps.executeUpdate();
         }
     }
@@ -313,10 +321,12 @@ public class Reader {
             ps.executeUpdate();
         }
     }
-    
+
     public void updateWarning(int type, String content) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("UPDATE warndb SET type=? content=? WHERE 1=1;")) {
-            
+        try (PreparedStatement ps = connect.prepareStatement("UPDATE warndb SET type=?,content=? WHERE 1=1;")) {
+            ps.setInt(1, type);
+            ps.setString(2, content);
+            ps.executeUpdate();
         }
     }
 

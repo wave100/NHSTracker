@@ -26,6 +26,7 @@ import me.rishshadra.nhstracker.gmailer.GmailInterface;
 import me.rishshadra.nhstracker.consts.Consts;
 import me.rishshadra.nhstracker.consts.Credentials;
 import me.rishshadra.nhstracker.gmailer.Mailer;
+import me.rishshadra.nhstracker.warnings.WarningTypes;
 
 /**
  *
@@ -417,6 +418,30 @@ public class RequestHandler extends HttpServlet {
 
     }
 
+    public void toggleWarning(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        
+        if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH || Integer.parseInt(request.getParameter("adminpass")) == Credentials.ADMIN_PASSWORD_HASH) {
+            me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful.");
+            Reader r = new Reader();
+            try {
+                r.toggleWarning();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                updateWarning(out, request, response);
+            try {
+                r.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
+            out.println("<h1>The password that you entered was incorrect.</h1>");
+        }
+        
+    }
+
     public void updateActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
         if (request.getParameterMap().size() == 7 || request.getParameterMap().size() == 8 || request.getParameterMap().size() == 9) {
@@ -442,6 +467,29 @@ public class RequestHandler extends HttpServlet {
         } else {
             me.rishshadra.nhstracker.logging.Logger.logText("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (4+1) expected.");
             out.println("Malformed URL! " + request.getParameterMap().size() + " parameters recieved, (4+1) expected.");
+        }
+    }
+
+    public void updateWarning(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
+            Reader r = new Reader();
+            try {
+                r.updateWarning(Integer.parseInt(request.getParameter("type")), request.getParameter("content"));
+                r.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            request.setAttribute("error-type", WarningTypes.ALERT_NAMES[WarningTypes.SUCCESS]);
+            request.setAttribute("error", "<strong>Success!</strong> The global warning was successfully updated.");
+        } else {
+            request.setAttribute("error-type", WarningTypes.ALERT_NAMES[WarningTypes.DANGER]);
+            request.setAttribute("error", "<strong>Error!</strong> You did not enter the correct admin password.");
+        }
+
+        try {
+            request.getRequestDispatcher("updateWarning.jsp").forward(request, response);
+        } catch (ServletException | IOException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -522,6 +570,9 @@ public class RequestHandler extends HttpServlet {
                 } else if (request.getParameter("action").equalsIgnoreCase("emailpin")) {
                     me.rishshadra.nhstracker.logging.Logger.logText("Emailing PIN");
                     emailPIN(out, request, response);
+                } else if (request.getParameter("action").equalsIgnoreCase("updatewarning")) {
+                    me.rishshadra.nhstracker.logging.Logger.logText("Updating Warning");
+                    updateWarning(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("blank")) {
                     me.rishshadra.nhstracker.logging.Logger.logText("Generating Blank Page");
                     out.println("");

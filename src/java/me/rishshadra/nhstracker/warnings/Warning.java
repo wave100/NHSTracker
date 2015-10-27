@@ -13,13 +13,19 @@ public class Warning {
 
     private final int type;
     private final String content;
+    private final boolean enabled;
 
-    public Warning(int t, String c) {
+    public Warning(int t, String c, boolean e) {
         type = t;
         content = c;
+        enabled = e;
     }
-    
+
     public String getHTML() {
-        return "<div class=\"alert" + WarningTypes.ALERT_NAMES[type] + "\" role=\"alert\">" + content + "</div>";
+        if (enabled) {
+            return "<div class=\"alert alert-" + WarningTypes.ALERT_NAMES[type] + "\" role=\"alert\">" + content + "</div>";
+        } else {
+            return "";
+        }
     }
 }

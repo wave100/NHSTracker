@@ -1,3 +1,4 @@
+<%@page import="me.rishshadra.nhstracker.sql.Reader"%>
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -84,9 +85,11 @@ and open the template in the editor.
 
         <div class="container theme-showcase" role="main" id="maindiv">
 
-            <% if (request.getAttribute("error") == null) {%>
-            <!--<frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>-->
-            <%} else {%>
+            <% if (request.getAttribute("error") == null) {
+                Reader r = new Reader();
+                out.println(r.getWarning().getHTML());
+                r.close();
+                } else {%>
             <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
                 <%}%>
 
