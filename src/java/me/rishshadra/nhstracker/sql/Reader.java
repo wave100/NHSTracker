@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import me.rishshadra.nhstracker.Activity;
-import me.rishshadra.nhstracker.Student;
+import me.rishshadra.nhstracker.models.Activity;
+import me.rishshadra.nhstracker.models.Student;
+import me.rishshadra.nhstracker.warnings.Warning;
 import me.rishshadra.nhstracker.consts.Consts;
 
 /**
@@ -175,7 +176,7 @@ public class Reader {
         rs.close();
         return s;
     }
-    
+
     public Student getStudentByID(int id) throws SQLException {
         ResultSet rs;
         Student s;
@@ -225,6 +226,16 @@ public class Reader {
         return students;
     }
 
+    public Warning getWarning() throws SQLException {
+        ResultSet rs;
+        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM warndb;")) {
+            rs = ps.executeQuery();
+            rs.last();
+        }
+        rs.close();
+        return new Warning(rs.getInt("type"), rs.getString("content"));
+    }
+
     public void groupParticipantSignOut(String fname, String lname) throws SQLException {
         ResultSet rs;
         try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM groupdb WHERE LastName=?")) {
@@ -264,14 +275,13 @@ public class Reader {
         }
     }
 
-    public void testConnection() throws SQLException {
-        connect.prepareStatement("show tables;").execute();
-        while (connect.isClosed()) {
-            reconnect();
-            connect.prepareStatement("show tables;").execute();
-        }
-    }
-
+//    public void testConnection() throws SQLException {
+//        connect.prepareStatement("select 1;").execute();
+//        while (connect.isClosed()) {
+//            reconnect();
+//            connect.prepareStatement("select 1;").execute();
+//        }
+//    }
     public void toggleApproval(int id) throws SQLException {
         try (PreparedStatement ps = connect.prepareStatement("UPDATE hrdb SET approved = !approved WHERE activityID=?;")) {
             ps.setInt(1, id);
@@ -301,6 +311,12 @@ public class Reader {
             ps.setString(4, s.getEmail());
             ps.setInt(5, s.getID());
             ps.executeUpdate();
+        }
+    }
+    
+    public void updateWarning(int type, String content) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("UPDATE warndb SET type=? content=? WHERE 1=1;")) {
+            
         }
     }
 

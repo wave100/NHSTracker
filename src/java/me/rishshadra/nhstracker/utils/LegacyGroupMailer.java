@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import javax.mail.MessagingException;
 import me.rishshadra.nhstracker.gmailer.GmailInterface;
 import me.rishshadra.nhstracker.sql.Reader;
-import me.rishshadra.nhstracker.Student;
+import me.rishshadra.nhstracker.models.Student;
 import me.rishshadra.nhstracker.consts.Consts;
 
 /**

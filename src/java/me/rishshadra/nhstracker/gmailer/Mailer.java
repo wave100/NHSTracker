@@ -8,7 +8,7 @@ package me.rishshadra.nhstracker.gmailer;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.mail.MessagingException;
-import me.rishshadra.nhstracker.Student;
+import me.rishshadra.nhstracker.models.Student;
 import me.rishshadra.nhstracker.consts.Consts;
 
 /**

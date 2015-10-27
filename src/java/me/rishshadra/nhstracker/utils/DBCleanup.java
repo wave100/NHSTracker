@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.rishshadra.nhstracker.sql.Reader;
-import me.rishshadra.nhstracker.Student;
+import me.rishshadra.nhstracker.models.Student;
 
 /**
  *

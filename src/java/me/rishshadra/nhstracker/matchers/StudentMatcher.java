@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.rishshadra.nhstracker;
+package me.rishshadra.nhstracker.matchers;
 
+import me.rishshadra.nhstracker.models.Student;
 import me.rishshadra.nhstracker.sql.Reader;
 import java.sql.SQLException;
 
@@ -34,7 +35,7 @@ public class StudentMatcher {
 
     private static int matchByFullName(String fullname) throws SQLException {
         if (r.getStudentsByName(fullname).size() == 1) {
-            return ((Student) r.getStudentsByName(fullname).get(0)).getID();
+            return (r.getStudentsByName(fullname).get(0)).getID();
         } else {
             return -1;
         }
@@ -56,17 +57,21 @@ public class StudentMatcher {
         }
     }
 
-    public void truncateMiddleName(String fullname) {
+    public String truncateMiddleName(String fullname) {
         if (fullname.indexOf(" ") != fullname.lastIndexOf(" ")) {
-            //TO BE IMPLEMENTED
+            fullname = fullname.substring(0, fullname.indexOf(" ")) + fullname.substring(fullname.lastIndexOf(" "), fullname.length());
         }
+
+        return fullname;
+
     }
 
     public static int attemptMatch(String fullname) throws SQLException {
         r = new Reader();
-        
+
         int ret = -1;
-        
+
+        fullname = fullname.trim();
         int fullmatch = matchByFullName(fullname);
         if (fullmatch > -1) {
             ret = fullmatch;
@@ -81,9 +86,9 @@ public class StudentMatcher {
                 }
             }
         }
-        
+
         r.close();
-        
+
         return ret;
     }
 }
