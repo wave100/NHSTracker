@@ -4,6 +4,7 @@
     Author     : Rish
 --%>
 
+<%@page import="me.rishshadra.nhstracker.warnings.WarningTypes"%>
 <%@page import="me.rishshadra.nhstracker.warnings.Warning"%>
 <%@page import="me.rishshadra.nhstracker.sql.Reader"%>
 <!DOCTYPE html>
@@ -71,16 +72,16 @@
                     Warning w = r.getWarning();%>
             <form method="POST" action="RequestHandler">
                 <input type="hidden" name="action" value="updatewarning" />
-                <input id="content" type="text" name="content" placeholder="Warning Text" value="<%out.println(w.getContent());%>"/> <br /> <br /> Enabled: <input type="checkbox" name="enabled" <%if (w.isEnabled()) {
+                <input id="content" type="text" name="content" placeholder="Warning Text" value="<%out.println(w.getContent());%>" required/> <br /> <br /> Enabled: <input type="checkbox" name="enabled" <%if (w.isEnabled()) {
                         out.println("checked");
                     }%>/><br />
                 Type: <select name="type">
-                    <option value="0">Success</option>
-                    <option value="1">Info</option>
-                    <option value="2">Warning</option>
-                    <option value="3">Danger</option>
+                    <option value="0" <%if (w.getType() == WarningTypes.SUCCESS) {out.println("selected");}%>>Success</option>
+                    <option value="1" <%if (w.getType() == WarningTypes.INFO) {out.println("selected");}%>>Info</option>
+                    <option value="2" <%if (w.getType() == WarningTypes.WARNING) {out.println("selected");}%>>Warning</option>
+                    <option value="3" <%if (w.getType() == WarningTypes.DANGER) {out.println("selected");}%>>Danger</option>
                 </select> <br /> <br />
-                <input id="adminpass" type="password" name="adminpass" placeholder="Admin Password"/> 
+                <input id="adminpass" type="password" name="adminpass" placeholder="Admin Password" required/> 
                 <input type="submit" placeholder="Submit" required /> <br />
                 <%r.close();%>
             </form>

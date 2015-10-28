@@ -261,6 +261,20 @@ public class Reader {
         }
         rs.close();
     }
+    
+    public void removeActivity(int id) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE ActivityID=?;")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+    
+    public void removeActivity(Activity a) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE ActivityID=?;")) {
+            ps.setInt(1, a.getActivityID());
+            ps.executeUpdate();
+        }
+    }
 
     public void removeStudent(int id) throws SQLException {
         try (PreparedStatement ps = connect.prepareStatement("DELETE FROM studb WHERE StudentID=?;")) {
@@ -330,10 +344,11 @@ public class Reader {
         }
     }
 
-    public void updateWarning(int type, String content) throws SQLException {
-        try (PreparedStatement ps = connect.prepareStatement("UPDATE warndb SET type=?,content=? WHERE 1=1;")) {
+    public void updateWarning(int type, String content, boolean enabled) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("UPDATE warndb SET type=?,content=?, enabled=? WHERE 1=1;")) {
             ps.setInt(1, type);
             ps.setString(2, content);
+            ps.setBoolean(3, enabled);
             ps.executeUpdate();
         }
     }

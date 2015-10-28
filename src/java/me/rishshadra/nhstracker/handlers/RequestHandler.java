@@ -343,8 +343,35 @@ public class RequestHandler extends HttpServlet {
     }
 
     public void removeActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
-        me.rishshadra.nhstracker.logging.Logger.logText("removeactivity is unimplemented.");
-        out.println("removeactivity is unimplemented.");
+        Reader r = new Reader();
+        Student s = new Student(true, "removeActivity init error");
+        try {
+            s = r.getStudentByID(Integer.valueOf(request.getParameter("studentid")));
+        } catch (SQLException ex) {
+            Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        if (Integer.valueOf(request.getParameter("pin")).equals(s.getPIN())) {
+            try {
+                r.removeActivity(Integer.valueOf(request.getParameter("activityid")));
+                r.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                request.setAttribute("student", s);
+                request.getRequestDispatcher("listActivities.jsp").forward(request, response);
+            } catch (ServletException | IOException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            request.setAttribute("error-type", "danger");
+            request.setAttribute("error", "Incorrect PIN entered.");
+            try {
+                request.getRequestDispatcher("index.jsp").forward(request, response);
+            } catch (ServletException | IOException ex) {
+                Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public void removeStudent(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
@@ -419,7 +446,7 @@ public class RequestHandler extends HttpServlet {
     }
 
     public void toggleWarning(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
-        
+
         if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH || Integer.parseInt(request.getParameter("adminpass")) == Credentials.ADMIN_PASSWORD_HASH) {
             me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful.");
             Reader r = new Reader();
@@ -428,7 +455,7 @@ public class RequestHandler extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
-                updateWarning(out, request, response); //Is this necessary?
+            updateWarning(out, request, response); //Is this necessary?
             try {
                 r.close();
             } catch (SQLException ex) {
@@ -439,24 +466,26 @@ public class RequestHandler extends HttpServlet {
             me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
             out.println("<h1>The password that you entered was incorrect.</h1>");
         }
-        
+
     }
 
     public void updateActivity(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
         Reader r = new Reader();
-        if (request.getParameterMap().size() == 7 || request.getParameterMap().size() == 8 || request.getParameterMap().size() == 9) {
-            boolean groupproj = false, approved = false;
-            if (request.getParameterMap().containsKey("groupproj")) {
-                groupproj = true;
-            }
-            if (request.getParameterMap().containsKey("approved")) {
-                approved = true;
-            }
-            new Activity(Integer.parseInt(request.getParameter("studentid")), Float.parseFloat(request.getParameter("hours")), request.getParameter("description"), request.getParameter("obsname"), request.getParameter("obsemail"), approved, groupproj, Integer.parseInt(request.getParameter("activityid"))).update();
-        }
         try {
+            if (r.getStudentByID(Integer.valueOf(request.getParameter("studentid"))).getPIN() == Integer.valueOf(request.getParameter("pin"))) {
+                boolean groupproj = false, approved = false;
+                if (request.getParameterMap().containsKey("groupproj")) {
+                    groupproj = true;
+                }
+                if (request.getParameterMap().containsKey("approved")) {
+                    approved = true;
+                }
+                new Activity(Integer.parseInt(request.getParameter("studentid")), Float.parseFloat(request.getParameter("hours")), request.getParameter("description"), request.getParameter("obsname"), request.getParameter("obsemail"), false, groupproj, Integer.parseInt(request.getParameter("activityid"))).update();
+            }
+            request.setAttribute("student", r.getStudentByID(Integer.valueOf(request.getParameter("studentid"))));
             r.close();
-        } catch (SQLException ex) {
+            request.getRequestDispatcher("listActivities.jsp").forward(request, response);
+        } catch (SQLException | ServletException | IOException ex) {
             Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -474,7 +503,7 @@ public class RequestHandler extends HttpServlet {
         if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH) {
             Reader r = new Reader();
             try {
-                r.updateWarning(Integer.parseInt(request.getParameter("type")), request.getParameter("content"));
+                r.updateWarning(Integer.parseInt(request.getParameter("type")), request.getParameter("content"), request.getParameterMap().containsKey("enabled"));
                 r.close();
             } catch (SQLException ex) {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);

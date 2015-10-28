@@ -20,12 +20,12 @@
         <title>Activity List</title>
     </head>
     <body>
-        <%DecimalFormat df = new DecimalFormat("###.##");
+        <%//DecimalFormat df = new DecimalFormat("###.##");
             String checkboxFormat;%>
         <link href="css/bootstrap.min.css" rel="stylesheet"> <link href="css/bootstrap-theme.min.css" rel="stylesheet"> <link href="css/theme.css" rel="stylesheet">
         <style>body{padding-top:25px;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>
         <table class="table table-striped">
-            <thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>
+            <thead> <tr> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th> <th>Actions</th>
                         <%if (!s.isEmpty()) {
                                 for (Activity a : (ArrayList<Activity>) s.getActivities()) {
                                     if (a.isApproved()) {
@@ -33,7 +33,7 @@
                                     } else {
                                         checkboxFormat = "";
                                     }
-                                    out.println("<tr> <td>" + new DecimalFormat("###.##").format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<input type=\"checkbox\" disabled=\"disabled\" " + checkboxFormat + " />" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                                    out.println("<tr> <td>" + new DecimalFormat("###.##").format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<input type=\"checkbox\" disabled=\"disabled\" " + checkboxFormat + " />" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "<td><a href=\"RequestHandler?action=removeActivity&pin=" + s.getPIN() + "&studentid=" + s.getID() + "&activityid=" + a.getActivityID() + "&name=" + s.getName() + "\">Del</a> / <a href=\"updateActivity.jsp?pin=" + s.getPIN() + "&studentid=" + s.getID() + "&activityid=" + a.getActivityID() + "\">Edit</a></td>" + "</tr>");
                                 }
                                 out.println("</table>");
 
