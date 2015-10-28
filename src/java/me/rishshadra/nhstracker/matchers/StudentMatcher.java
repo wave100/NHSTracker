@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.rishshadra.nhstracker;
+package me.rishshadra.nhstracker.matchers;
 
+import me.rishshadra.nhstracker.models.Student;
+import me.rishshadra.nhstracker.sql.Reader;
 import java.sql.SQLException;
 
 /**
@@ -13,9 +15,9 @@ import java.sql.SQLException;
  */
 public class StudentMatcher {
 
-    private static final Reader r = new Reader();
+    private static Reader r;
 
-    public static int matchByFirstName(String fname) throws SQLException {
+    private static int matchByFirstName(String fname) throws SQLException {
         if (r.getStudentsByName(fname).size() == 1) {
             return ((Student) r.getStudentsByName(fname).get(0)).getID();
         } else {
@@ -23,7 +25,7 @@ public class StudentMatcher {
         }
     }
 
-    public static int matchByLastName(String lname) throws SQLException {
+    private static int matchByLastName(String lname) throws SQLException {
         if (r.getStudentsByName(lname).size() == 1) {
             return ((Student) r.getStudentsByName(lname).get(0)).getID();
         } else {
@@ -31,15 +33,15 @@ public class StudentMatcher {
         }
     }
 
-    public static int matchByFullName(String fullname) throws SQLException {
+    private static int matchByFullName(String fullname) throws SQLException {
         if (r.getStudentsByName(fullname).size() == 1) {
-            return ((Student) r.getStudentsByName(fullname).get(0)).getID();
+            return (r.getStudentsByName(fullname).get(0)).getID();
         } else {
             return -1;
         }
     }
 
-    public static String getLastName(String s) {
+    private static String getLastName(String s) {
         if (s.contains(" ")) {
             return s.substring(s.indexOf(" ") + 1, s.length());
         } else {
@@ -47,7 +49,7 @@ public class StudentMatcher {
         }
     }
 
-    public static String getFirstName(String s) {
+    private static String getFirstName(String s) {
         if (s.contains(" ")) {
             return s.substring(0, s.indexOf(" "));
         } else {
@@ -55,27 +57,38 @@ public class StudentMatcher {
         }
     }
 
-    public void truncateMiddleName(String fullname) {
+    public String truncateMiddleName(String fullname) {
         if (fullname.indexOf(" ") != fullname.lastIndexOf(" ")) {
-
+            fullname = fullname.substring(0, fullname.indexOf(" ")) + fullname.substring(fullname.lastIndexOf(" "), fullname.length());
         }
+
+        return fullname;
+
     }
 
     public static int attemptMatch(String fullname) throws SQLException {
+        r = new Reader();
+
+        int ret = -1;
+
+        fullname = fullname.trim();
         int fullmatch = matchByFullName(fullname);
         if (fullmatch > -1) {
-            return fullmatch;
+            ret = fullmatch;
         } else {
             int firstmatch = matchByFirstName(getFirstName(fullname));
             if (firstmatch > -1) {
-                return firstmatch;
+                ret = firstmatch;
             } else {
                 int lastmatch = matchByLastName(getLastName(fullname));
                 if (lastmatch > -1) {
-                    return lastmatch;
+                    ret = lastmatch;
                 }
             }
         }
-        return -1;
+
+        r.close();
+
+        return ret;
     }
 }

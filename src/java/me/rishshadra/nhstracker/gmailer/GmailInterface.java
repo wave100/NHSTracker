@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.rishshadra.gmailer;
+package me.rishshadra.nhstracker.gmailer;
 
 import com.google.api.client.util.Base64;
 import com.google.api.services.gmail.Gmail;
@@ -25,15 +25,15 @@ import javax.mail.internet.MimeMessage;
  *
  * @author Rish Shadra <rshadra@gmail.com>
  */
-public class GMailer {
+public class GmailInterface {
 
     Gmail gmail;
 
-    public GMailer() {
+    public GmailInterface() {
         try {
             gmail = TokenHolder.getGmail(); //TokenHolder is a class that authenticates with Google and returns a gmail object. It is not included in the repository because it's got my API keys in it.
         } catch (IOException ex) {
-            Logger.getLogger(GMailer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GmailInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -41,7 +41,7 @@ public class GMailer {
         try {
             gmail = TokenHolder.getGmail();
         } catch (IOException ex) {
-            Logger.getLogger(GMailer.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(GmailInterface.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

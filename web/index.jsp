@@ -1,3 +1,4 @@
+<%@page import="me.rishshadra.nhstracker.sql.Reader"%>
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -67,6 +68,7 @@ and open the template in the editor.
                     <ul class="nav navbar-nav">
                         <li class="active"><a href="index.jsp">View</a></li>
                         <li><a href="submit.jsp">Submit</a></li>
+                        <li><a href="about.jsp">About</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -74,17 +76,24 @@ and open the template in the editor.
 
         <div class="container theme-showcase" role="main" id="maindiv">
 
-            <% if (request.getAttribute("error") == null) {%>
-            <!--<frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>-->
-            <%} else {%>
+            <% if (request.getAttribute("error") == null) {
+                    Reader r = new Reader();
+                    out.println(r.getWarning().getHTML());
+                    r.close();
+                } else {%>
             <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
                 <%}%>
 
             <form>
-                <input id="studentName" type="text" name="studentname" placeholder="Name" <% if (request.getAttribute("name") != null) {out.println("value=\"" + request.getAttribute("name") + "\"");} %>required/> <input id="studentPIN" type="password" name="pin" placeholder="PIN" style="width: 80px;" maxlength="4" required /> <input type="button" onClick="getHours()" value="Get Hours" />
-            </form>
+                <input id="studentName" type="text" name="studentname" placeholder="Name" <% if (request.getAttribute("name") != null) {
+                        out.println("value=\"" + request.getAttribute("name") + "\"");
+                    }%>required/> <input id="studentPIN" type="password" name="pin" placeholder="PIN" style="width: 80px;" maxlength="4" required /> <input type="button" onClick="getHours()" value="Get Hours" />
+                <a href="ForgotPIN.jsp">Forgot your PIN?</a></form>
 
             <iframe id="resultFrame" src="RequestHandler?action=blank" seamless="seamless" scrolling="no"></iframe>
+
+            <div id="creditholder"><h6 id="credittext">Designed by Rish Shadra. Hosted by Evan Goldstein.</h6></div>
+
         </div> <!-- /container -->
 
         <!-- Bootstrap core JavaScript

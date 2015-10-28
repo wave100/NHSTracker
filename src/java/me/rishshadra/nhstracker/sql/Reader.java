@@ -1,4 +1,4 @@
-package me.rishshadra.nhstracker;
+package me.rishshadra.nhstracker.sql;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -18,7 +18,11 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import me.rishshadra.nhstracker.models.Activity;
+import me.rishshadra.nhstracker.models.Student;
+import me.rishshadra.nhstracker.warnings.Warning;
 import me.rishshadra.nhstracker.consts.Consts;
+import me.rishshadra.nhstracker.warnings.WarningTypes;
 
 /**
  *
@@ -27,16 +31,13 @@ import me.rishshadra.nhstracker.consts.Consts;
 public class Reader {
 
     private Connection connect;
-    private Database db;
 
     public Reader() {
-
-        db = new Database();
 
         //System.out.println("Init Reader");
         try {
             //System.out.println("Getting Conn");
-            connect = db.getConnection();
+            connect = C3P0Database.getConnection();
             //System.out.println("Gotten Conn");
         } catch (SQLException ex) {
             Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
@@ -131,6 +132,14 @@ public class Reader {
 
         }
     }
+    
+    public float getHourSum() throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("SELECT SUM(HOURS) AS HourSum FROM hrdb;")) {
+            ResultSet rs = ps.executeQuery();
+            rs.last();
+            return rs.getFloat("HourSum");
+        }
+    }
 
     public int getResultSetLength(ResultSet rs) throws SQLException {
         rs.last();
@@ -156,10 +165,32 @@ public class Reader {
         return activities;
     }
 
+    public Student getStudentByEmail(String email) throws SQLException {
+        ResultSet rs;
+        Student s;
+        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM studb WHERE Email = ?;")) {
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            if (getResultSetLength(rs) == 0) {
+                System.out.println("No student found with email " + email);
+                s = new Student(true, "No student found with email " + email);
+            } else if (getResultSetLength(rs) == 1) {
+                rs.next();
+                s = new Student(rs.getInt("StudentID"), rs.getString("Name"), rs.getInt("GraduationYear"), rs.getInt("PIN"), rs.getString("Email"), rs.getInt("InductionYear"));
+            } else {
+                System.out.println("Multiple matches found with email " + email);
+                s = new Student(true, "Multiple matches found with email " + email);
+            }
+        }
+        rs.close();
+        return s;
+    }
+
     public Student getStudentByID(int id) throws SQLException {
         ResultSet rs;
         Student s;
-        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM studb WHERE StudentID = " + id + ";")) {
+        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM studb WHERE StudentID = ?;")) {
+            ps.setInt(1, id);
             rs = ps.executeQuery();
             if (getResultSetLength(rs) == 0) {
                 System.out.println("No student found with ID " + id);
@@ -189,7 +220,7 @@ public class Reader {
         rs.close();
         return students;
     }
-    
+
     public ArrayList<Student> getStudentsByName(String name) throws SQLException {
         ArrayList<Student> students = new ArrayList<>();
         ResultSet rs;
@@ -202,6 +233,18 @@ public class Reader {
         }
         rs.close();
         return students;
+    }
+
+    public Warning getWarning() throws SQLException {
+        ResultSet rs;
+        Warning w = null;
+        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM warndb;")) {
+            rs = ps.executeQuery();
+            rs.last();
+            w = new Warning(rs.getInt("type"), rs.getString("content"), rs.getBoolean("enabled"));
+        }
+        rs.close();
+        return w;
     }
 
     public void groupParticipantSignOut(String fname, String lname) throws SQLException {
@@ -217,6 +260,20 @@ public class Reader {
             }
         }
         rs.close();
+    }
+    
+    public void removeActivity(int id) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE ActivityID=?;")) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
+    
+    public void removeActivity(Activity a) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE ActivityID=?;")) {
+            ps.setInt(1, a.getActivityID());
+            ps.executeUpdate();
+        }
     }
 
     public void removeStudent(int id) throws SQLException {
@@ -243,18 +300,22 @@ public class Reader {
         }
     }
 
-    public void testConnection() throws SQLException {
-        connect.prepareStatement("show tables;").execute();
-        while (connect.isClosed()) {
-            reconnect();
-            connect.prepareStatement("show tables;").execute();
-        }
-    }
-
+//    public void testConnection() throws SQLException {
+//        connect.prepareStatement("select 1;").execute();
+//        while (connect.isClosed()) {
+//            reconnect();
+//            connect.prepareStatement("select 1;").execute();
+//        }
+//    }
     public void toggleApproval(int id) throws SQLException {
         try (PreparedStatement ps = connect.prepareStatement("UPDATE hrdb SET approved = !approved WHERE activityID=?;")) {
             ps.setInt(1, id);
+            ps.executeUpdate();
+        }
+    }
 
+    public void toggleWarning() throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("UPDATE warndb SET enabled = !enabled WHERE 1=1;")) {
             ps.executeUpdate();
         }
     }
@@ -283,9 +344,18 @@ public class Reader {
         }
     }
 
+    public void updateWarning(int type, String content, boolean enabled) throws SQLException {
+        try (PreparedStatement ps = connect.prepareStatement("UPDATE warndb SET type=?,content=?, enabled=? WHERE 1=1;")) {
+            ps.setInt(1, type);
+            ps.setString(2, content);
+            ps.setBoolean(3, enabled);
+            ps.executeUpdate();
+        }
+    }
+
     private void reconnect() {
         try {
-            connect = db.getConnection();
+            connect = C3P0Database.getConnection();
         } catch (SQLException ex) {
             Logger.getLogger(Reader.class.getName()).log(Level.SEVERE, null, ex);
             //    reconnect();
@@ -295,7 +365,7 @@ public class Reader {
 }
 
 //TODO:
-//  Email addresses in the student DB
+//
 //
 //IDEAS:
 //  Leaderboard based on volunteer hours?

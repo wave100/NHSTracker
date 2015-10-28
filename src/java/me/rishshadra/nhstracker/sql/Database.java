@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.rishshadra.nhstracker;
+package me.rishshadra.nhstracker.sql;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -47,7 +47,7 @@ public class Database {
         }
     }
 
-    public Connection getConnection() throws SQLException {
+    public static Connection getConnection() throws SQLException {
         //System.out.println("Returning Connection");
         if (localConnection) {
             return connectToLocalDB();

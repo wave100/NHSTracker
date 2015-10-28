@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package me.rishshadra.nhstracker;
+package me.rishshadra.nhstracker.handlers;
 
+import me.rishshadra.nhstracker.sql.Reader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;

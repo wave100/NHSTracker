@@ -1,3 +1,4 @@
+<%@page import="me.rishshadra.nhstracker.sql.Reader"%>
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -28,6 +29,9 @@ and open the template in the editor.
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
 
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type='text/javascript' src="js/hover.js"></script>
+
     </head>
     <body role="document">
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -45,17 +49,20 @@ and open the template in the editor.
                     <ul class="nav navbar-nav">
                         <li><a href="index.jsp">View</a></li>
                         <li class="active"><a href="submit.jsp">Submit</a></li>
+                        <li><a href="about.jsp">About</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
         </nav>
 
         <div class="container theme-showcase" role="main">
-            <% if (request.getAttribute("error") == null) {%>
-                <!--<frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>-->
-            <%} else {%>
-                <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
-            <%}%>
+            <% if (request.getAttribute("error") == null) {
+                    Reader r = new Reader();
+                    out.println(r.getWarning().getHTML());
+                    r.close();
+                } else {%>
+            <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
+                <%}%>
 
             <form method="POST" action="RequestHandler" id="activityform">
                 <input type="hidden" name="action" value="addactivity" />
@@ -69,6 +76,9 @@ and open the template in the editor.
 
                     <input type="submit" /> &nbsp;&nbsp; By submitting this form, I swear that all of the information in this form is truthful.</div>
             </form>
+
+            <div id="creditholder"><h6 id="credittext">@</h6></div>
+
         </div> <!-- /container -->
 
         <!-- Bootstrap core JavaScript

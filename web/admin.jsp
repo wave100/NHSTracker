@@ -1,3 +1,4 @@
+<%@page import="me.rishshadra.nhstracker.sql.Reader"%>
 <!DOCTYPE html>
 <!--
 To change this license header, choose License Headers in Project Properties.
@@ -28,6 +29,8 @@ and open the template in the editor.
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
 
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type='text/javascript' src="js/hover.js"></script>
 
         <script language="javascript">
             var searchURL = "RequestHandler?action=searchstudents&studentname=";
@@ -74,6 +77,7 @@ and open the template in the editor.
                     <ul class="nav navbar-nav">
                         <li><a href="index.jsp">View</a></li>
                         <li><a href="submit.jsp">Submit</a></li>
+                        <li><a href="about.jsp">About</a></li>
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
@@ -81,9 +85,11 @@ and open the template in the editor.
 
         <div class="container theme-showcase" role="main" id="maindiv">
 
-            <% if (request.getAttribute("error") == null) {%>
-            <!--<frame id="notificationframe"><div class="alert alert-info" role="alert"> <strong>Warning!</strong> This site is still under construction. If something breaks, please email me at rshadra@gmail.com and I'll sort things out! </div></frame>-->
-                <%} else {%>
+            <% if (request.getAttribute("error") == null) {
+                Reader r = new Reader();
+                out.println(r.getWarning().getHTML());
+                r.close();
+                } else {%>
             <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
                 <%}%>
 
@@ -94,6 +100,9 @@ and open the template in the editor.
             </form>
 
             <iframe id="resultFrame" src="RequestHandler?action=searchstudents&studentname="></iframe>
+
+            <div id="creditholder"><h6 id="credittext">@</h6></div>
+
         </div> <!-- /container -->
 
         <!-- Bootstrap core JavaScript

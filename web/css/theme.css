@@ -26,3 +26,21 @@ body {
 .theme-showcase .navbar .container {
     width: auto;
 }
+
+#creditholder {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    height: 20px;
+    width: 100%;
+}
+
+#credittext {
+    position: absolute;
+    right: 0px;
+    height: 100%; 
+    padding: 0px;
+    margin: 0px;
+    margin-right: 5px;
+    color: #A6A6A6;
+}
