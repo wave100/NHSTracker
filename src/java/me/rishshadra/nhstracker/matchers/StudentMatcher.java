@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class StudentMatcher {
 
     private static Reader r;
-
+    @Deprecated
     private static int matchByFirstName(String fname) throws SQLException {
         if (r.getStudentsByName(fname).size() == 1) {
             return ((Student) r.getStudentsByName(fname).get(0)).getID();
@@ -24,7 +24,7 @@ public class StudentMatcher {
             return -1;
         }
     }
-
+    @Deprecated
     private static int matchByLastName(String lname) throws SQLException {
         if (r.getStudentsByName(lname).size() == 1) {
             return ((Student) r.getStudentsByName(lname).get(0)).getID();
@@ -32,7 +32,7 @@ public class StudentMatcher {
             return -1;
         }
     }
-
+    @Deprecated
     private static int matchByFullName(String fullname) throws SQLException {
         if (r.getStudentsByName(fullname).size() == 1) {
             return (r.getStudentsByName(fullname).get(0)).getID();
@@ -41,6 +41,14 @@ public class StudentMatcher {
         }
     }
 
+    private static int match(String name) throws SQLException {
+        if (r.getStudentsByName(name).size() == 1) {
+            return (r.getStudentsByName(name).get(0)).getID();
+        } else {
+            return -1;
+        }
+    }
+    
     private static String getLastName(String s) {
         if (s.contains(" ")) {
             return s.substring(s.indexOf(" ") + 1, s.length());
