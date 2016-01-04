@@ -22,7 +22,6 @@ import me.rishshadra.nhstracker.models.Activity;
 import me.rishshadra.nhstracker.models.Student;
 import me.rishshadra.nhstracker.warnings.Warning;
 import me.rishshadra.nhstracker.consts.Consts;
-import me.rishshadra.nhstracker.warnings.WarningTypes;
 
 /**
  *
@@ -72,6 +71,8 @@ public class Reader {
         }
     }
 
+    //Don't worry about this.
+    @Deprecated
     public void addGroupParticipant(String fname, String lname) throws SQLException {
         try (PreparedStatement ps = connect.prepareStatement("INSERT INTO groupdb VALUES(?,?,?);")) {
             ps.setString(1, fname);
@@ -110,6 +111,7 @@ public class Reader {
     }
 
     //TODO: ADD REMOVAL METHODS FOR STUDENTS AND ACTIVITIES.
+    @Deprecated
     public void endOfYearMaintenance() {
         // Back up information, write to CSV or similar and generate HTML summary page with a method that is to be written. Then truncate and restore students who will be returning next year to studb. Hrdb stays empty.
     }
@@ -132,7 +134,7 @@ public class Reader {
 
         }
     }
-    
+
     public float getHourSum() throws SQLException {
         try (PreparedStatement ps = connect.prepareStatement("SELECT SUM(HOURS) AS HourSum FROM hrdb;")) {
             ResultSet rs = ps.executeQuery();
@@ -141,11 +143,23 @@ public class Reader {
         }
     }
 
-    public int getResultSetLength(ResultSet rs) throws SQLException {
+    private int getResultSetLength(ResultSet rs) throws SQLException {
         rs.last();
         int length = rs.getRow();
         rs.beforeFirst(); //So getStudentActivity will work. DO NOT CLOSE THE RESULTSET HERE! THINGS WILL BREAK HORRENDOUSLY. YOU HAVE BEEN FOREWARNED.
         return length;
+    }
+
+    public ArrayList<Activity> getAllActivities() throws SQLException {
+        ArrayList<Activity> activities;
+        try (PreparedStatement ps = connect.prepareStatement("SELECT * FROM hrdb;")) {
+            ResultSet rs = ps.executeQuery();
+            activities = new ArrayList<>();
+            while (rs.next()) {
+                activities.add(new Activity(rs.getInt("StudentID"), rs.getInt("Hours"), rs.getString("ProjDesc"), rs.getString("ObsName"), rs.getString("ObsEmail"), rs.getBoolean("Approved"), rs.getBoolean("GroupProj"), rs.getInt("ActivityID")));
+            }
+        }
+        return activities;
     }
 
     public ArrayList<Activity> getStudentActivities(int id) throws SQLException {
@@ -261,14 +275,14 @@ public class Reader {
         }
         rs.close();
     }
-    
+
     public void removeActivity(int id) throws SQLException {
         try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE ActivityID=?;")) {
             ps.setInt(1, id);
             ps.executeUpdate();
         }
     }
-    
+
     public void removeActivity(Activity a) throws SQLException {
         try (PreparedStatement ps = connect.prepareStatement("DELETE FROM hrdb WHERE ActivityID=?;")) {
             ps.setInt(1, a.getActivityID());

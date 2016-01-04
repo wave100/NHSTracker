@@ -161,7 +161,9 @@ public class Student {
 
     public void updateActivities() {
         try {
-            activities = new Reader().getStudentActivities(id);
+            Reader r = new Reader();
+            activities = r.getStudentActivities(id);
+            r.close();
         } catch (SQLException ex) {
             Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
         }

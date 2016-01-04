@@ -1,15 +1,13 @@
-<%-- 
-    Document   : ForgotPIN
-    Created on : Oct 22, 2015, 10:57:08 AM
-    Author     : Rish Shadra <rshadra@gmail.com>
---%>
-
 <%@page import="me.rishshadra.nhstracker.sql.Reader"%>
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
 <html>
     <head>
-        <title>Forgot PIN</title>
+        <title>View All Hours (Admin)</title>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -29,10 +27,34 @@
         <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->  
+        <![endif]-->
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type='text/javascript' src="js/hover.js"></script>
+
+        <script language="javascript">
+            var hoursURL = "RequestHandler?action=getallhours";
+
+            function setHourList() {
+                if (document.getElementById("unapproved").checked) {
+                    document.getElementById("resultFrame").setAttribute("src", hoursURL + "&adminpass=" + document.getElementById("adminpass").value + "&unapproved");
+                } else {
+                    document.getElementById("resultFrame").setAttribute("src", hoursURL + "&adminpass=" + document.getElementById("adminpass").value);
+                }
+            }
+
+        </script>    
+
+        <style>
+
+            #resultFrame {
+                border: none;
+                height: 80%;
+                width: 100%;
+                overflow: scroll;
+            }
+
+        </style>
 
         <script>
             (function (i, s, o, g, r, a, m) {
@@ -85,9 +107,12 @@
             <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
                 <%}%>
 
-            <form action="RequestHandler" method="POST">
-                <input type="hidden" name="action" value="emailpin"> <input id="studentName" type="text" name="input" placeholder="Name or Email" required/> <input type="submit" value="Send PIN" />
+            <form>
+                <input id="adminpass" type="password" name="adminpass" placeholder="Admin Password" /> <input type="button" value="Submit" onClick="setHourList();"/> &nbsp;&nbsp;&nbsp;
+                Show approved hours: <input id="unapproved" name="unapproved" type="checkbox" onClick="setHourList();" />
             </form>
+
+            <iframe id="resultFrame" src=""></iframe>
 
             <div id="creditholder"><h6 id="credittext">@</h6></div>
 
@@ -102,4 +127,3 @@
         <script src="assets/js/ie10-viewport-bug-workaround.js"></script>
     </body>
 </html>
-

@@ -16,8 +16,8 @@ public class Consts {
     public static final String SITE_URL = "http://nhs.icarusnet.me";
     public static final String GROUP_SUPERVISOR_NAME = "Sara Williams";
     public static final String GROUP_SUPERVISOR_EMAIL = "sawilliams@hopkinton.k12.ma.us";
-    public static final String VERSION = "2.0rc1";
+    public static final String VERSION = "2.0rc2";
 
-    public static final int CURRENT_INDUCTION_SECTION = 201502;
+    public static final int CURRENT_INDUCTION_SECTION = 201503;
     
 }

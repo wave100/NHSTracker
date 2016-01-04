@@ -37,6 +37,13 @@ and open the template in the editor.
                 document.getElementById("resultFrame").setAttribute("src", hoursURL + document.getElementById("studentName").value + "&pin=" + document.getElementById("studentPIN").value);
             }
 
+            function handleEnterPress(e) {
+                var key = e.keyCode || e.which;
+                if (key == 13) {
+                    getHours();
+                }
+            }
+
         </script>    
 
         <style>
@@ -50,6 +57,24 @@ and open the template in the editor.
             }
 
         </style>
+
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-71586223-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
 
     </head>
     <body role="document">
@@ -85,10 +110,10 @@ and open the template in the editor.
                 <%}%>
 
             <form>
-                <input id="studentName" type="text" name="studentname" placeholder="Name" <% if (request.getAttribute("name") != null) {
+                <input id="studentName" type="text" name="studentname" placeholder="Name" onKeyPress="handleEnterPress(event)" <% if (request.getAttribute("name") != null) {
                         out.println("value=\"" + request.getAttribute("name") + "\"");
-                    }%>required/> <input id="studentPIN" type="password" name="pin" placeholder="PIN" style="width: 80px;" maxlength="4" required /> <input type="button" onClick="getHours()" value="Get Hours" />
-                <a href="ForgotPIN.jsp">Forgot your PIN?</a></form>
+                    }%>required/> <input id="studentPIN" type="password" name="pin" placeholder="PIN" style="width: 80px;" maxlength="4" onKeyPress="handleEnterPress(event)" required /> <input type="button" onClick="getHours()" value="Get Hours" />
+                <a href="forgotPIN.jsp">Forgot your PIN?</a></form>
 
             <iframe id="resultFrame" src="RequestHandler?action=blank" seamless="seamless" scrolling="no"></iframe>
 

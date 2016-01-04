@@ -36,6 +36,24 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type='text/javascript' src="js/hover.js"></script>
 
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-71586223-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+
     </head>
     <body role="document">
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -76,10 +94,18 @@
                         out.println("checked");
                     }%>/><br />
                 Type: <select name="type">
-                    <option value="0" <%if (w.getType() == WarningTypes.SUCCESS) {out.println("selected");}%>>Success</option>
-                    <option value="1" <%if (w.getType() == WarningTypes.INFO) {out.println("selected");}%>>Info</option>
-                    <option value="2" <%if (w.getType() == WarningTypes.WARNING) {out.println("selected");}%>>Warning</option>
-                    <option value="3" <%if (w.getType() == WarningTypes.DANGER) {out.println("selected");}%>>Danger</option>
+                    <option value="0" <%if (w.getType() == WarningTypes.SUCCESS) {
+                            out.println("selected");
+                        }%>>Success</option>
+                    <option value="1" <%if (w.getType() == WarningTypes.INFO) {
+                            out.println("selected");
+                        }%>>Info</option>
+                    <option value="2" <%if (w.getType() == WarningTypes.WARNING) {
+                            out.println("selected");
+                        }%>>Warning</option>
+                    <option value="3" <%if (w.getType() == WarningTypes.DANGER) {
+                            out.println("selected");
+                        }%>>Danger</option>
                 </select> <br /> <br />
                 <input id="adminpass" type="password" name="adminpass" placeholder="Admin Password" required/> 
                 <input type="submit" placeholder="Submit" required /> <br />

@@ -96,7 +96,9 @@ public class Activity {
 
     public void update() {
         try {
-            new Reader().updateActivity(this);
+            Reader r = new Reader();
+            r.updateActivity(this);
+            r.close();
         } catch (SQLException ex) {
             Logger.getLogger(Activity.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -35,6 +35,24 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type='text/javascript' src="js/hover.js"></script>
 
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-71586223-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+
     </head>
     <body role="document">
         <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -66,7 +84,7 @@
                 } else {%>
             <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
                 <%}%>
-<%Reader r = new Reader();%>
+                <%Reader r = new Reader();%>
             <p>This site was designed by Rish Shadra. It is currently being hosted by Evan Goldstein. It is running NHSTracker <%=Consts.VERSION%>. This year, it has logged a total of <%=r.getHourSum()%> volunteer hours!</p>
             <%r.close();%>
 

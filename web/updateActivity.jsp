@@ -35,17 +35,28 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type='text/javascript' src="js/hover.js"></script>
 
+        <script>
+            (function (i, s, o, g, r, a, m) {
+                i['GoogleAnalyticsObject'] = r;
+                i[r] = i[r] || function () {
+                    (i[r].q = i[r].q || []).push(arguments)
+                }, i[r].l = 1 * new Date();
+                a = s.createElement(o),
+                        m = s.getElementsByTagName(o)[0];
+                a.async = 1;
+                a.src = g;
+                m.parentNode.insertBefore(a, m)
+            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+            ga('create', 'UA-71586223-1', 'auto');
+            ga('send', 'pageview');
+
+        </script>
+
     </head>
     <body role="document">
 
         <div class="container theme-showcase" role="main">
-            <% if (request.getAttribute("error") == null) {
-                    Reader r = new Reader();
-                    out.println(r.getWarning().getHTML());
-                    r.close();
-                } else {%>
-            <frame id="notificationframe"><div class="alert alert-<%=request.getAttribute("error-type")%>" role="alert"> <%=request.getAttribute("error")%> </div></frame>
-                <%}%>
 
             <form method="POST" action="RequestHandler" id="activityform">
                 <%  Reader r = new Reader();
@@ -70,7 +81,7 @@
                 <textarea name="description" style="resize: none; width: 254px; height: 100px;" required><%=a.getProjdesc()%></textarea><br /><br />
                 <div id="groupdiv">Was this project a group project? &nbsp;&nbsp; <input type="checkbox" name="groupproj" id="group" /> <br /> <br />
 
-                    <input type="submit" /> &nbsp;&nbsp; By submitting this form, I swear that all of the information in this form is truthful.</div>
+                    <input type="submit" value="Update" /> &nbsp;&nbsp; By submitting this form, I swear that all of the information in this form is truthful.</div>
                     <%} else {%>
                 Incorrect PIN entered.
                 <%}%>

@@ -5,6 +5,7 @@
  */
 package me.rishshadra.nhstracker.handlers;
 
+import java.awt.Color;
 import me.rishshadra.nhstracker.models.Activity;
 import me.rishshadra.nhstracker.models.Student;
 import me.rishshadra.nhstracker.sql.Reader;
@@ -252,7 +253,8 @@ public class RequestHandler extends HttpServlet {
                             if (!s.isEmpty()) {
                                 request.setAttribute("student", s);
                                 request.getRequestDispatcher("listActivities.jsp").forward(request, response);
-
+                                r.close();
+                                
                             } else {
                                 out.println(s.getError());
                             }
@@ -316,6 +318,82 @@ public class RequestHandler extends HttpServlet {
                     r.close();
                 } catch (SQLException ex) {
                     Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
+                out.println("<h1>The password that you entered was incorrect.</h1>");
+            }
+        } catch (NullPointerException ex) {
+            me.rishshadra.nhstracker.logging.Logger.logText("Failed to get hours as admin. Insufficient or incorrect parameters.");
+            out.println("Incorrect or insufficient parameters. If you are seeing this message, contact " + Consts.SUPPORT_EMAIL + " with a description of what you were doing before this error occurred.");
+        }
+    }
+
+    public void getAllHoursAdmin(PrintWriter out, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            if (request.getParameter("adminpass").hashCode() == Credentials.ADMIN_PASSWORD_HASH || Integer.parseInt(request.getParameter("adminpass")) == Credentials.ADMIN_PASSWORD_HASH) {
+                if (request.getParameterMap().containsKey("unapproved")) {
+                    me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful. Displaying page.");
+
+                    Reader r = new Reader();
+
+                    try {
+
+                        DecimalFormat df = new DecimalFormat("###.##");
+                        String checkboxFormat;
+                        out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
+                        out.println("<style>body{padding-top:25px; overflow-y:scroll;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
+                        out.println("<table class=\"table table-striped\">");
+                        out.println("<thead><tr> <th>Student</th> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
+                        for (Activity a : (ArrayList<Activity>) r.getAllActivities()) {
+                            if (a.isApproved()) {
+                                checkboxFormat = "checked=\"checked\"";
+                            } else {
+                                checkboxFormat = "";
+                            }
+                            out.println("<tr> <td>" + r.getStudentByID(a.getStudentID()).getName() + "</td> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity2\"/><input type=\"hidden\" name=\"id\" value=\"" + a.getStudentID() + "\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"hidden\" name=\"adminpass\" value=\"" + Credentials.ADMIN_PASSWORD_HASH + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                        }
+                        out.println("</table>");
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    try {
+                        r.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else {
+                    me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication successful. Displaying page.");
+
+                    Reader r = new Reader();
+
+                    try {
+
+                        DecimalFormat df = new DecimalFormat("###.##");
+                        String checkboxFormat;
+                        out.println("<link href=\"css/bootstrap.min.css\" rel=\"stylesheet\"> <link href=\"css/bootstrap-theme.min.css\" rel=\"stylesheet\"> <link href=\"css/theme.css\" rel=\"stylesheet\">");
+                        out.println("<style>body{padding-top:25px; overflow-y:scroll;} td{word-wrap:break-word;} a{color: #0000EE} a:visited{color: #0000EE}</style>");
+                        out.println("<table class=\"table table-striped\">");
+                        out.println("<thead><tr> <th>Student</th> <th>Hours</th> <th>Observer Email</th> <th>Observer Name</th> <th>Description</th> <th>Approval Status</th>");
+                        for (Activity a : (ArrayList<Activity>) r.getAllActivities()) {
+                            if (!a.isApproved()) {
+                                checkboxFormat = "";
+                                out.println("<tr> <td>" + r.getStudentByID(a.getStudentID()).getName() + "</td> <td>" + df.format(a.getHours()) + "</td> <td>" + a.getObsemail() + "</td> <td>" + a.getObsname() + "</td> <td>" + a.getProjdesc() + "</td> <td>" + "<form method=\"POST\" action=\"RequestHandler\" id=\"approve" + a.getActivityID() + "\"><input type=\"hidden\" name=\"action\" value=\"approveactivity2\"/><input type=\"hidden\" name=\"id\" value=\"" + a.getStudentID() + "\"/><input type=\"hidden\" name=\"activityid\" value=\"" + a.getActivityID() + "\"/><input type=\"hidden\" name=\"adminpass\" value=\"" + Credentials.ADMIN_PASSWORD_HASH + "\"/><input type=\"checkbox\" onClick=\"document.getElementById('approve" + a.getActivityID() + "').submit();\"" + checkboxFormat + " /></form>" + "</td>" /* <td>" + a.isGroupproj() + "</td>*/ + "</tr>");
+                            }
+                        }
+                        out.println("</table>");
+
+                    } catch (SQLException ex) {
+                        Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    try {
+                        r.close();
+                    } catch (SQLException ex) {
+                        Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             } else {
                 me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
@@ -394,15 +472,21 @@ public class RequestHandler extends HttpServlet {
             }
 
             if (request.getParameterMap().containsKey("belowQuota")) {
-                out.println("<style>.notEnoughSubmitted{color: #0000EE !important;} a{color: #B2B2FA;} a:visited{color: #B2B2FA;}</style>");
+                //out.println("<style>.notEnoughSubmitted{color: #0000EE !important;} a{color: #B2B2FA;} a:visited{color: #B2B2FA;}</style>");
                 for (Student s : results) {
-                    if (s.getApprovedHours() < 10) {
-                        if (s.getHours() >= 10) {
-                            out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
-                        } else {
-                            out.println("<a href=\"#\" class=\"notEnoughSubmitted\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
-                        }
-                    }
+//                    if (s.getApprovedHours() < 10) {
+//                        if (s.getHours() >= 10) {
+//                            out.println("<a href=\"#\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
+//                        } else {
+//                            out.println("<a href=\"#\" class=\"notEnoughSubmitted\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
+//                        }
+//                    }
+                    float red = 255 * ((10 - Math.min(10, s.getHours())) / 10);
+                    float green = 255 * (Math.min(10, s.getHours()) / 10);
+
+                    String hex = String.format("#%02x%02x%02x", (int) red, (int) green, 0);
+
+                    out.println("<a href=\"#\" style=\"color:" + hex + "\" onclick='parent.viewHours(" + s.getID() + ")'>" + s.getName() + "</a><br />");
                 }
             } else {
                 out.println("<style>a{color: #0000EE;} a:visited{color: #0000EE;}</style>");
@@ -431,7 +515,11 @@ public class RequestHandler extends HttpServlet {
             } catch (SQLException ex) {
                 Logger.getLogger(RequestHandler.class.getName()).log(Level.SEVERE, null, ex);
             }
-            getHoursAdmin(out, request, response);
+            if (request.getParameter("action").equalsIgnoreCase("approveactivity2")) {
+                getAllHoursAdmin(out, request, response);
+            } else {
+                getHoursAdmin(out, request, response);
+            }
             try {
                 r.close();
             } catch (SQLException ex) {
@@ -440,7 +528,7 @@ public class RequestHandler extends HttpServlet {
 
         } else {
             me.rishshadra.nhstracker.logging.Logger.logText("Admin authentication failed.");
-            out.println("<h1>The password that you entered was incorrect.</h1>");
+            out.println("<h1>The password that you entered was incorrect. (toggleApproval Failed.)</h1>");
         }
 
     }
@@ -593,8 +681,14 @@ public class RequestHandler extends HttpServlet {
                 } else if (request.getParameter("action").equalsIgnoreCase("gethoursadmin")) {
                     me.rishshadra.nhstracker.logging.Logger.logText("Getting Hours (Admin)");
                     getHoursAdmin(out, request, response);
+                } else if (request.getParameter("action").equalsIgnoreCase("getallhours")) {
+                    me.rishshadra.nhstracker.logging.Logger.logText("Getting All Hours (Admin)");
+                    getAllHoursAdmin(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("approveactivity")) {
                     me.rishshadra.nhstracker.logging.Logger.logText("Approving Activity");
+                    toggleApproval(out, request, response);
+                } else if (request.getParameter("action").equalsIgnoreCase("approveactivity2")) {
+                    me.rishshadra.nhstracker.logging.Logger.logText("Approving Activity (Scope: All)");
                     toggleApproval(out, request, response);
                 } else if (request.getParameter("action").equalsIgnoreCase("emailpin")) {
                     me.rishshadra.nhstracker.logging.Logger.logText("Emailing PIN");
